@@ -1,0 +1,126 @@
+<%- include('partials/header') %>
+
+<div class="products-section">
+    <div class="container">
+        <h1 class="section-title">Our Dessert Collection</h1>
+        
+        <!-- Advanced Filters -->
+        <div class="advanced-filters">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label class="filter-label">Category</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">All Items</button>
+                        <button class="filter-btn" data-category="Cakes">Cakes</button>
+                        <button class="filter-btn" data-category="Cookies">Cookies</button>
+                        <button class="filter-btn" data-category="Pies">Pies</button>
+                        <button class="filter-btn" data-category="Italian">Italian</button>
+                        <button class="filter-btn" data-category="Brownies">Brownies</button>
+                        <button class="filter-btn" data-category="Tarts">Tarts</button>
+                        <button class="filter-btn" data-category="Ice Cream">Ice Cream</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dessert-grid" id="dessert-grid">
+            <% desserts.forEach(dessert => { %>
+                <div class="dessert-card" data-category="<%= dessert.category %>">
+                    <div class="dessert-image">
+                        <img src="<%= dessert.imageURL %>" alt="<%= dessert.name %>">
+                        <% if (dessert.discount > 0) { %>
+                            <div class="discount-badge"><%= dessert.discount %>% OFF</div>
+                        <% } %>
+                        <% if (dessert.price >= 1000) { %>
+                            <div class="free-delivery-badge">FREE Delivery</div>
+                        <% } %>
+                    </div>
+                    <div class="dessert-info">
+                        <h3 class="dessert-name"><%= dessert.name %></h3>
+                        <p class="dessert-description"><%= dessert.description %></p>
+                        
+                        <div class="rating-section">
+                            <div class="rating-stars" data-rating="<%= dessert.rating %>">
+                                <i class="fas fa-star"></i>
+                                <%= dessert.rating %>
+                            </div>
+                            <span class="reviews">(<%= dessert.reviews %> reviews)</span>
+                        </div>
+                        
+                        <div class="price-section">
+                            <span class="dessert-price current-price">₹<%= dessert.price.toFixed(2) %></span>
+                            <% if (dessert.originalPrice && dessert.originalPrice > dessert.price) { %>
+                                <span class="original-price">₹<%= dessert.originalPrice.toFixed(2) %></span>
+                                <span class="discount-percent"><%= dessert.discount %>% off</span>
+                            <% } %>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="add-to-cart-btn" 
+                                    data-id="<%= dessert._id %>" 
+                                    data-name="<%= dessert.name %>" 
+                                    data-price="<%= dessert.price %>" 
+                                    data-image="<%= dessert.imageURL %>">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="review-btn" 
+                                    data-id="<%= dessert._id %>" 
+                                    data-name="<%= dessert.name %>">
+                                <i class="fas fa-star"></i> Reviews
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Modal -->
+<div class="modal-overlay" id="reviews-modal">
+    <div class="modal-content reviews-modal">
+        <div class="modal-header">
+            <h2 id="review-modal-title">Product Reviews</h2>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="reviews-summary" id="reviews-summary">
+                <!-- Reviews summary will be populated here -->
+            </div>
+            
+            <div class="write-review-section">
+                <h3>Write a Review</h3>
+                <form id="review-form">
+                    <div class="rating-input">
+                        <label>Your Rating:</label>
+                        <div class="star-rating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Review Title:</label>
+                        <input type="text" id="review-title" placeholder="Summary of your review" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Review:</label>
+                        <textarea id="review-text" placeholder="Tell others about your experience with this dessert..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-review">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="reviews-list" id="reviews-list">
+                <!-- Reviews will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

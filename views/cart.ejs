@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<div class="cart-section">
+    <div class="container">
+        <h1 class="section-title">Shopping Cart</h1>
+        
+        <div id="cart-content">
+            <div class="empty-cart" id="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Your cart is empty</h2>
+                <p>Add some delicious desserts to get started!</p>
+                <a href="/menu" class="btn">Browse Menu</a>
+            </div>
+
+            <div class="cart-container" id="cart-container" style="display: none;">
+                <div class="cart-items" id="cart-items">
+                    <!-- Cart items will be populated by JavaScript -->
+                </div>
+                
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal (<span id="total-items">0</span> items)</span>
+                        <span>₹<span id="subtotal">0.00</span></span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Fee</span>
+                        <span id="delivery-fee">₹50.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span>₹<span id="tax">0.00</span></span>
+                    </div>
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span>₹<span id="total">0.00</span></span>
+                    </div>
+                    <a href="/checkout" class="btn" id="checkout-btn">Proceed to Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

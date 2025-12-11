@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+
+<div class="container">
+    <h1>Order Your Favorite Dessert</h1>
+    <form id="order-form">
+        <div class="form-group">
+            <label for="customerName">Your Name</label>
+            <input type="text" id="customerName" name="customerName" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="selectedDessert">Choose a Dessert</label>
+            <select id="selectedDessert" name="selectedDessert" required>
+                <% desserts.forEach(dessert => { %>
+                    <option value="<%= dessert._id %>" data-price="<%= dessert.price %>"><%= dessert.name %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" required>
+        </div>
+        <div class="form-group">
+            <p>Total Price: $<span id="total-price">0.00</span></p>
+        </div>
+        <button type="submit" class="btn">Place Order</button>
+    </form>
+    <div id="order-success" style="display: none;">
+        <h2>Thank you for your order!</h2>
+        <p>We have received your order and will process it shortly.</p>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

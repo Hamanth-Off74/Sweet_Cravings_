@@ -1,0 +1,168 @@
+<%- include('partials/header') %>
+
+<!-- Razorpay Checkout Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<div class="checkout-section">
+    <div class="container">
+        <h1 class="section-title">Checkout</h1>
+        
+        <div class="checkout-container">
+            <form class="checkout-form" id="checkout-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Customer Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+                    <div class="form-group">
+                        <label for="address">Street Address</label>
+                        <input type="text" id="address" name="address">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="zipCode">ZIP Code</label>
+                            <input type="text" id="zipCode" name="zipCode">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryInstructions">Delivery Instructions (Optional)</label>
+                        <textarea id="deliveryInstructions" name="deliveryInstructions" rows="3" placeholder="Any special instructions for delivery..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-option" onclick="selectPayment('razorpay')">
+                            <input type="radio" id="razorpay" name="paymentMethod" value="razorpay" checked>
+                            <label for="razorpay">
+                                <i class="fas fa-credit-card"></i> Pay with Razorpay (Cards/UPI/Wallets)
+                            </label>
+                        </div>
+                        <div class="payment-option" onclick="selectPayment('cash')">
+                            <input type="radio" id="cash" name="paymentMethod" value="cash">
+                            <label for="cash">
+                                <i class="fas fa-money-bill"></i> Cash on Delivery
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="razorpay-info" class="payment-info">
+                        <p style="color: #666; font-size: 0.9rem; margin-top: 15px;">
+                            <i class="fas fa-shield-alt"></i> Secure payment powered by Razorpay
+                        </p>
+                        <p style="color: #666; font-size: 0.85rem;">
+                            Supports Credit/Debit Cards, UPI, Netbanking, Wallets & more
+                        </p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-secondary" id="place-order-btn" style="width: 100%; margin-top: 20px;">
+                    <i class="fas fa-lock"></i> Proceed to Payment
+                </button>
+            </form>
+
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div id="checkout-items">
+                    <!-- Items will be populated by JavaScript -->
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹<span id="checkout-subtotal">0.00</span></span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span>₹<span id="checkout-delivery">50.00</span></span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax</span>
+                    <span>₹<span id="checkout-tax">0.00</span></span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>₹<span id="checkout-total">0.00</span></span>
+                </div>
+                
+                <div class="delivery-info">
+                    <h4><i class="fas fa-truck"></i> Delivery Information</h4>
+                    <p>Estimated delivery: 30-45 minutes</p>
+                    <p>Free delivery on orders above ₹500</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="order-success-modal" class="modal" style="display: none;">
+    <div class="modal-content success-modal">
+        <div class="success-animation">
+            <div class="success-checkmark">
+                <div class="check-icon">
+                    <span class="icon-line line-tip"></span>
+                    <span class="icon-line line-long"></span>
+                    <div class="icon-circle"></div>
+                    <div class="icon-fix"></div>
+                </div>
+            </div>
+        </div>
+        <h2 class="success-title">Order Placed Successfully! 🎉</h2>
+        <p class="success-message">Thank you for your order! Your delicious desserts are on their way.</p>
+        <div class="order-details-box">
+            <div class="order-detail-item">
+                <i class="fas fa-receipt"></i>
+                <div>
+                    <span class="detail-label">Order ID</span>
+                    <span class="detail-value" id="order-id"></span>
+                </div>
+            </div>
+            <div class="order-detail-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <span class="detail-label">Estimated Delivery</span>
+                    <span class="detail-value">30-45 minutes</span>
+                </div>
+            </div>
+            <div class="order-detail-item">
+                <i class="fas fa-envelope"></i>
+                <div>
+                    <span class="detail-label">Confirmation</span>
+                    <span class="detail-value">Sent to your email</span>
+                </div>
+            </div>
+        </div>
+        <div class="success-actions">
+            <button class="btn btn-primary" onclick="window.location.href='/orders'">
+                <i class="fas fa-list"></i> View My Orders
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='/menu'">
+                <i class="fas fa-shopping-bag"></i> Continue Shopping
+            </button>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

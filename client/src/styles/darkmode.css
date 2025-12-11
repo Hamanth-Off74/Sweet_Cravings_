@@ -1,0 +1,164 @@
+/* Dark Mode Variables */
+:root {
+  --bg-primary: #fff;
+  --bg-secondary: #f9f9f9;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --border-color: #ddd;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+}
+
+html.dark-mode {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+  --card-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Mode Styles */
+html.dark-mode {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html.dark-mode body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html.dark-mode .header {
+  background: rgba(26, 26, 26, 0.95);
+  border-bottom: 1px solid var(--border-color);
+}
+
+html.dark-mode .navbar {
+  background: var(--bg-primary);
+}
+
+html.dark-mode .top-bar {
+  background: #0d0d0d;
+  border-bottom: 1px solid var(--border-color);
+}
+
+html.dark-mode .category-nav {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+html.dark-mode .cart-section,
+html.dark-mode .menu-section,
+html.dark-mode .product-detail-page {
+  background: var(--bg-secondary);
+}
+
+html.dark-mode .cart-item,
+html.dark-mode .dessert-card,
+html.dark-mode .cart-summary,
+html.dark-mode .product-detail-grid,
+html.dark-mode .product-tabs,
+html.dark-mode .review-card,
+html.dark-mode .review-form,
+html.dark-mode .rating-summary {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+  box-shadow: 0 2px 10px var(--card-shadow);
+}
+
+html.dark-mode .search-bar input {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .dessert-name,
+html.dark-mode .product-title,
+html.dark-mode h1, html.dark-mode h2, html.dark-mode h3 {
+  color: var(--text-primary);
+}
+
+html.dark-mode .dessert-description,
+html.dark-mode .dessert-price,
+html.dark-mode p {
+  color: var(--text-secondary);
+}
+
+html.dark-mode .modal-content {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+html.dark-mode .dropdown-menu {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 16px var(--card-shadow);
+}
+
+html.dark-mode .dropdown-item:hover {
+  background: var(--bg-secondary);
+}
+
+html.dark-mode input,
+html.dark-mode textarea,
+html.dark-mode select {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+html.dark-mode .order-card,
+html.dark-mode .stat-card {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  box-shadow: 0 2px 10px var(--card-shadow);
+}
+
+html.dark-mode .bg-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background: #ddd;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  overflow: hidden;
+}
+
+.dark-mode-toggle.active {
+  background: #ff6161;
+}
+
+.dark-mode-toggle-slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.dark-mode-toggle.active .dark-mode-toggle-slider {
+  transform: translateX(30px);
+}
+
+.dark-mode-toggle-slider i {
+  color: #333;
+}
+
+.dark-mode-toggle.active .dark-mode-toggle-slider i {
+  color: #ff6161;
+}
