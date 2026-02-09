@@ -11,7 +11,7 @@ function Wishlist() {
       id: item.id,
       name: item.name,
       price: item.price,
-      image: item.image
+      imageURL: item.imageURL
     });
   };
 

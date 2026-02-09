@@ -1,0 +1,282 @@
+/* YouTube Style Voice Modal */
+.voice-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    animation: ytFadeIn 0.3s ease;
+}
+
+.yt-voice-modal {
+    width: 100%;
+    max-width: 600px;
+    height: 480px;
+    background: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 40px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.yt-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #606060;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.yt-close-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.yt-voice-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.yt-status {
+    font-size: 32px;
+    font-weight: 500;
+    color: #030303;
+    margin-bottom: 40px;
+    height: 45px;
+    text-align: center;
+}
+
+.yt-mic-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.yt-mic-btn {
+    width: 80px;
+    height: 80px;
+    background: #ff4d4d;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+}
+
+.yt-mic-container.listening .yt-mic-btn {
+    box-shadow: none;
+    transform: scale(1.1);
+}
+
+.yt-mic-rings {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.yt-mic-container.listening .yt-mic-rings {
+    display: block;
+}
+
+.ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #ff4d4d;
+    opacity: 0.2;
+    animation: ytPulse 2s infinite;
+}
+
+.ring:nth-child(2) {
+    animation-delay: 0.6s;
+}
+
+.ring:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+@keyframes ytPulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.2;
+    }
+
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+.yt-transcription-container {
+    width: 100%;
+    text-align: center;
+    min-height: 80px;
+}
+
+.yt-transcription {
+    font-size: 24px;
+    color: #030303;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.yt-interim {
+    color: #606060;
+}
+
+.yt-hint {
+    color: #606060;
+    font-size: 16px;
+}
+
+.yt-footer {
+    border-top: 1px solid #eee;
+    width: 100%;
+    padding-top: 30px;
+    text-align: center;
+}
+
+.yt-footer p {
+    color: #606060;
+    font-size: 15px;
+    font-style: italic;
+}
+
+.yt-items-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.yt-item-pill {
+    background: #f8f8f8;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 15px;
+    color: #030303;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #eee;
+}
+
+.yt-item-pill i {
+    color: #4CAF50;
+}
+
+@keyframes ytFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Base Floating / Inline styles */
+.floating-voice-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 65px;
+    height: 65px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+}
+
+.inline-voice-btn {
+    background: #ffffff;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color) !important;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    z-index: 2000;
+}
+
+.inline-voice-btn:hover {
+    background: var(--primary-color);
+    color: white !important;
+}
+
+.yt-cart-link {
+    margin-top: 25px;
+    background: #030303;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.yt-cart-link:hover {
+    background: #333;
+}
+
+@media (max-width: 640px) {
+    .yt-voice-modal {
+        height: 100vh;
+        max-width: 100%;
+        border-radius: 0;
+        padding: 80px 20px;
+        justify-content: flex-start;
+    }
+}

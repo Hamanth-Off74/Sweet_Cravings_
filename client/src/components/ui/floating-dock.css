@@ -1,0 +1,117 @@
+.floating-dock-desktop {
+  display: flex;
+  height: 4rem;
+  gap: 1rem;
+  align-items: flex-end;
+  border-radius: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem;
+  padding-bottom: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.icon-container {
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.dark-mode .icon-container {
+  background-color: rgba(23, 23, 23, 0.9);
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: #333;
+}
+
+.dark-mode .icon-wrapper {
+  color: #e5e5e5;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  top: -40px;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 1001;
+}
+
+/* Mobile styles */
+.floating-dock-mobile {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 1000;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .floating-dock-desktop {
+    display: none;
+  }
+  .floating-dock-mobile {
+    display: block;
+  }
+}
+
+.mobile-toggle {
+  height: 3.5rem;
+  width: 3.5rem;
+  border-radius: 9999px;
+  background-color: var(--primary-color, #ff4d4d);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.mobile-menu-container {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobile-item {
+  height: 3rem;
+  width: 3rem;
+  border-radius: 9999px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

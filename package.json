@@ -11,12 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "assemblyai": "^4.22.1",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "mongoose": "^8.19.2",
+    "multer": "^2.0.2",
     "nodemon": "^3.1.10",
     "razorpay": "^2.9.6"
   }

@@ -10,7 +10,8 @@ export const desserts = [
         rating: 4.8,
         reviews: 312,
         imageURL: '/images/cakes/chocolate-cake.jpg',
-        category: 'Cakes'
+        category: 'Cakes',
+        customizable: true
     },
     {
         _id: '2',
@@ -22,7 +23,8 @@ export const desserts = [
         rating: 4.7,
         reviews: 290,
         imageURL: '/images/cakes/red velvet-cake.jpg',
-        category: 'Cakes'
+        category: 'Cakes',
+        customizable: true
     },
     {
         _id: '3',
@@ -34,7 +36,8 @@ export const desserts = [
         rating: 4.9,
         reviews: 450,
         imageURL: '/images/cakes/black forest-cake.jpg',
-        category: 'Cakes'
+        category: 'Cakes',
+        customizable: true
     },
     {
         _id: '4',
@@ -46,7 +49,8 @@ export const desserts = [
         rating: 4.8,
         reviews: 380,
         imageURL: '/images/cakes/cheese-cake.jpg',
-        category: 'Cakes'
+        category: 'Cakes',
+        customizable: true
     },
     {
         _id: '5',

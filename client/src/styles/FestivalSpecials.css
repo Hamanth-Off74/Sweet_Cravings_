@@ -1,0 +1,234 @@
+/* Festival Specials Banner CSS */
+
+.festival-specials-container {
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+.festival-specials-banner {
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.festival-specials-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+/* Header */
+.festival-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.festival-emoji {
+    font-size: 48px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.festival-title-wrapper {
+    flex: 1;
+    min-width: 200px;
+}
+
+.festival-title {
+    color: #fff;
+    font-size: 24px !important;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.festival-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px !important;
+    margin: 0;
+}
+
+.festival-discount-badge {
+    background: rgba(255, 255, 255, 0.95);
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Festival Items Scroll */
+.festival-items-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+.festival-items-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.festival-items-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.festival-items-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 3px;
+}
+
+/* Item Card */
+.festival-item-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 14px;
+    padding: 15px 20px;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.festival-item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.festival-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.festival-item-name {
+    flex: 1;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px !important;
+}
+
+.festival-item-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ff6b6b;
+    background: #fff;
+    color: #ff6b6b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0 !important;
+}
+
+.festival-item-btn:hover {
+    background: #ff6b6b;
+    color: #fff;
+}
+
+.festival-item-btn i {
+    font-size: 12px !important;
+}
+
+/* Promo Code */
+.festival-promo-code {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    border-radius: 30px;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.festival-promo-code span {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px !important;
+}
+
+.festival-promo-code strong {
+    color: #fff;
+    font-size: 18px !important;
+    letter-spacing: 2px;
+    font-family: monospace;
+}
+
+.festival-promo-code button {
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 0 !important;
+}
+
+.festival-promo-code button:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.festival-promo-code button i {
+    font-size: 14px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .festival-specials-container {
+        padding: 0 15px;
+    }
+
+    .festival-specials-banner {
+        padding: 20px;
+    }
+
+    .festival-emoji {
+        font-size: 36px;
+    }
+
+    .festival-title {
+        font-size: 20px !important;
+    }
+
+    .festival-item-card {
+        min-width: 160px;
+        padding: 12px 15px;
+    }
+
+    .festival-discount-badge {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}

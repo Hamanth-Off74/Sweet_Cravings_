@@ -1,0 +1,332 @@
+/* Voice Order Component Styles */
+
+.voice-order-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.voice-order-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.voice-order-header h3 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.voice-order-header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* Voice Control Buttons */
+.voice-order-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.voice-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.voice-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.voice-btn:active {
+    transform: translateY(0);
+}
+
+.voice-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.voice-btn-start {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    font-size: 20px;
+    padding: 18px 40px;
+}
+
+.voice-btn-stop {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    color: #333;
+}
+
+.voice-btn-cancel {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+}
+
+.mic-icon, .stop-icon, .cancel-icon {
+    font-size: 24px;
+}
+
+/* Recording Indicator */
+.recording-active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    animation: slideIn 0.3s ease;
+}
+
+.recording-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.recording-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #ff4757;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.3);
+    }
+}
+
+/* Processing Indicator */
+.processing-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    animation: slideIn 0.3s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.processing-indicator p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Result Displays */
+.voice-result {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: #333;
+    animation: fadeIn 0.5s ease;
+}
+
+.voice-result h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.voice-transcription p {
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.voice-success {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    border-left: 5px solid #00b894;
+}
+
+.voice-success h4 {
+    color: #00b894;
+}
+
+.voice-error {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-left: 5px solid #d63031;
+}
+
+.voice-error h4 {
+    color: #d63031;
+}
+
+.voice-items ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+.voice-items li {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.voice-items li:last-child {
+    margin-bottom: 0;
+}
+
+/* Tips Section */
+.voice-order-tips {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.voice-order-tips h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.voice-order-tips ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.voice-order-tips li {
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.voice-order-tips li:before {
+    content: "•";
+    position: absolute;
+    left: 8px;
+    font-size: 20px;
+    color: #ffd700;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .voice-order-container {
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .voice-order-header h3 {
+        font-size: 24px;
+    }
+
+    .voice-btn {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+
+    .voice-btn-start {
+        font-size: 18px;
+        padding: 15px 30px;
+    }
+
+    .voice-result h4 {
+        font-size: 16px;
+    }
+
+    .voice-items li {
+        font-size: 14px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .voice-order-container {
+        padding: 15px;
+    }
+
+    .recording-active {
+        width: 100%;
+    }
+
+    .voice-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .voice-result {
+        background: rgba(40, 40, 40, 0.95);
+        color: #e0e0e0;
+    }
+
+    .voice-items li {
+        background: #2d2d2d;
+        color: #e0e0e0;
+    }
+}

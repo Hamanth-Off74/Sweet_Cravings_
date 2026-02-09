@@ -13,6 +13,10 @@ function Orders() {
   const fetchOrders = async () => {
     try {
       const response = await axios.get('/api/orders');
+      console.log('Orders received:', response.data);
+      if (response.data && response.data.length > 0) {
+        console.log('First order items:', response.data[0].items);
+      }
       setOrders(response.data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -170,7 +174,7 @@ function Orders() {
                       padding: '12px 0',
                       borderBottom: index < order.items.length - 1 ? '1px solid #f5f5f5' : 'none'
                     }}>
-                      <img src={item.image} alt={item.name} style={{
+                      <img src={item.imageURL || item.image} alt={item.name} style={{
                         width: '60px',
                         height: '60px',
                         objectFit: 'cover',

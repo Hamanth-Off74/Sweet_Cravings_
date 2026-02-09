@@ -1,0 +1,88 @@
+/* Global Seasonal Effects Container */
+.seasonal-effects-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998; /* Below modal/popup but above content */
+    overflow: hidden;
+}
+
+/* ===========================
+   DECEMBER: SNOW EFFECT
+   =========================== */
+.snowflake {
+    position: absolute;
+    top: -10px;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0,0,0,0.1);
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(105vh) rotate(360deg);
+    }
+}
+
+/* ===========================
+   FEBRUARY: HEARTS EFFECT
+   =========================== */
+.floating-heart {
+    position: absolute;
+    bottom: -20px;
+    color: rgba(255, 105, 180, 0.6);
+    animation: floatUp linear forwards;
+    font-size: 20px;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-105vh) scale(1.5) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+/* ===========================
+   OCTOBER/NOVEMBER: SPARKLES (Diwali)
+   =========================== */
+.sparkle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle linear infinite;
+    box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+/* ===========================
+   JUNE/JULY: RAIN (Monsoon)
+   =========================== */
+.raindrop {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    width: 2px;
+    height: 15px;
+    top: -20px;
+    animation: rainFall linear infinite;
+}
+
+@keyframes rainFall {
+    to {
+        transform: translateY(105vh);
+    }
+}

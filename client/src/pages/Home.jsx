@@ -1,23 +1,33 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishlistContext';
 import { getFeaturedDesserts, getLimitedDesserts } from '../data/desserts';
+import OfferBanner from '../components/OfferBanner';
+import '../styles/MenuModern.css';
 
 function Home() {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [featured] = useState(getFeaturedDesserts());
   const [desserts] = useState(getLimitedDesserts(5));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showWelcome, setShowWelcome] = useState(true);
 
   useEffect(() => {
-    // Hide welcome screen after 3 seconds
+    // Show welcome screen for 3.5 seconds
     const timer = setTimeout(() => {
       setShowWelcome(false);
-    }, 3000);
+      // Ensure body scrolling is restored
+      document.body.style.overflow = '';
+    }, 3500);
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => {
+      clearTimeout(timer);
+      // Always restore scrolling on cleanup
+      document.body.style.overflow = '';
+    };
+  }, [showWelcome]);
 
   useEffect(() => {
     // Auto-advance slideshow
@@ -42,7 +52,7 @@ function Home() {
       id: dessert._id,
       name: dessert.name,
       price: dessert.price,
-      image: dessert.imageURL
+      imageURL: dessert.imageURL
     });
   };
 
@@ -113,64 +123,94 @@ function Home() {
         </div>
       </div>
 
-      <div className="products-section" id="features">
+      {/* Dynamic Offers from Admin Panel */}
+      <OfferBanner />
+
+      <div className="products-section menu-modern" id="features">
         <div className="container">
           <h2 className="section-title">Featured Desserts</h2>
-          
-          <div className="dessert-grid">
+
+          <div className="dessert-grid" id="dessert-grid">
             {desserts.map((dessert) => (
-              <div 
-                key={dessert._id} 
-                className="dessert-card" 
-                data-category={dessert.category.toLowerCase()} 
-                data-price={dessert.price} 
-                data-rating={dessert.rating}
+              <div
+                key={dessert._id}
+                className="dessert-card"
+                data-category={dessert.category.toLowerCase()}
               >
+                {/* Top controls: heart + discount */}
+                <button
+                  className="card-heart"
+                  onClick={() => {
+                    if (isInWishlist(dessert._id)) {
+                      removeFromWishlist(dessert._id);
+                    } else {
+                      addToWishlist({
+                        id: dessert._id,
+                        name: dessert.name,
+                        price: dessert.price,
+                        image: dessert.imageURL,
+                        rating: dessert.rating
+                      });
+                    }
+                  }}
+                  aria-label="Add to wishlist"
+                >
+                  <i className={`fa${isInWishlist(dessert._id) ? 's' : 'r'} fa-heart`}></i>
+                </button>
+                {dessert.discount > 0 && (
+                  <div className="discount-pill">{dessert.discount}% OFF</div>
+                )}
+
+                {/* Image */}
                 <div className="dessert-image">
                   <img src={dessert.imageURL} alt={dessert.name} />
-                  {dessert.discount > 0 && (
-                    <div className="discount-badge">{dessert.discount}% OFF</div>
-                  )}
-                  <button className="add-to-wishlist-btn" data-id={dessert._id}>
-                    <i className="fas fa-heart"></i>
-                  </button>
                 </div>
+
+                {/* Info */}
                 <div className="dessert-info">
-                  <h3 className="dessert-name">{dessert.name}</h3>
-                  <p className="dessert-description">
-                    {dessert.description.substring(0, 60)}...
-                  </p>
-                  
+                  <Link
+                    to={`/product/${dessert._id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <h3 className="dessert-name">{dessert.name}</h3>
+                  </Link>
+
                   <div className="rating-section">
-                    <div className="star-rating" data-rating={dessert.rating}>
-                      <span className="rating-value">
-                        <i className="fas fa-star"></i> {dessert.rating}
-                      </span>
+                    <div className="rating-stars" data-rating={dessert.rating}>
+                      <i className="fas fa-star"></i>
+                      {dessert.rating}
                     </div>
-                    <span className="reviews-count">({dessert.reviews})</span>
+                    <span className="reviews">({dessert.reviews} reviews)</span>
                   </div>
-                  
+
                   <div className="price-section">
                     <span className="current-price">₹{dessert.price.toFixed(2)}</span>
                     {dessert.originalPrice && dessert.originalPrice > dessert.price && (
-                      <span className="original-price">₹{dessert.originalPrice.toFixed(2)}</span>
+                      <>
+                        <span className="original-price">₹{dessert.originalPrice.toFixed(2)}</span>
+                        <span className="discount-percent">{dessert.discount}% off</span>
+                      </>
                     )}
                   </div>
-                  
+
                   <div className="card-actions">
                     <button
                       className="add-to-cart-btn"
                       onClick={() => handleAddToCart(dessert)}
                     >
-                      <i className="fas fa-shopping-cart"></i> Add to Cart
+                      <i className="fas fa-shopping-cart"></i>
+                      Add
                     </button>
-                    <button className="view-reviews-btn">Reviews</button>
+                    <button className="review-btn">
+                      <i className="fas fa-star"></i>
+                      Reviews
+                    </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          
+
           <div style={{ textAlign: 'center', marginTop: '40px' }}>
             <Link to="/menu" className="btn btn-secondary">
               <i className="fas fa-eye"></i> View All Desserts

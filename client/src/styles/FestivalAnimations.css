@@ -1,0 +1,238 @@
+/* Festival Animations CSS */
+
+.festival-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ========== FIREWORKS ========== */
+.fireworks-container {
+    background: transparent;
+}
+
+.firework-particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: firework-explode 1.5s ease-out forwards;
+}
+
+@keyframes firework-explode {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(calc(cos(var(--angle)) * 80px), calc(sin(var(--angle)) * 80px)) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ========== SNOWFALL ========== */
+.snowfall-container .snowflake {
+    position: absolute;
+    top: -30px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: snow-fall linear infinite;
+}
+
+@keyframes snow-fall {
+    0% {
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(200px) rotate(360deg);
+        opacity: 0.3;
+    }
+}
+
+/* ========== CONFETTI ========== */
+.confetti-container .confetti-piece {
+    position: absolute;
+    top: -20px;
+    border-radius: 2px;
+    animation: confetti-fall linear infinite;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-20px) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(250px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ========== HEARTS ========== */
+.hearts-container .floating-heart {
+    position: absolute;
+    bottom: -30px;
+    color: #ff6b6b;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    animation: heart-float ease-in-out infinite;
+}
+
+@keyframes heart-float {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-200px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* ========== DIWALI LIGHTS ========== */
+.diwali-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.diya-string {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    border-bottom: 2px dashed rgba(255, 215, 0, 0.3);
+}
+
+.diya-light {
+    position: absolute;
+    top: 20px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    animation: diya-glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes diya-glow {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+}
+
+/* ========== HOLI COLORS ========== */
+.holi-container .color-splash {
+    position: absolute;
+    top: -50px;
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: holi-splash ease-out infinite;
+}
+
+@keyframes holi-splash {
+    0% {
+        transform: translateY(-30px) scale(0.3);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(180px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* ========== BALLOONS ========== */
+.balloons-container .balloon {
+    position: absolute;
+    bottom: -80px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: balloon-rise ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.balloon::before {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid inherit;
+}
+
+.balloon-string {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes balloon-rise {
+    0% {
+        transform: translateY(0) rotate(-5deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-250px) rotate(5deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+    .snowfall-container .snowflake,
+    .confetti-container .confetti-piece,
+    .holi-container .color-splash {
+        font-size: 80% !important;
+    }
+
+    .balloons-container .balloon {
+        width: 20px !important;
+        height: 24px !important;
+    }
+}

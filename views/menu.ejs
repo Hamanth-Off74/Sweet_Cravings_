@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 
-<div class="products-section">
+<div class="products-section menu-modern">
     <div class="container">
         <h1 class="section-title">Our Dessert Collection</h1>
         
@@ -26,19 +26,23 @@
         <div class="dessert-grid" id="dessert-grid">
             <% desserts.forEach(dessert => { %>
                 <div class="dessert-card" data-category="<%= dessert.category %>">
+                    <!-- Wishlist heart -->
+                    <button class="add-to-wishlist-btn" data-id="<%= dessert._id %>">
+                        <i class="fas fa-heart"></i>
+                    </button>
+
+                    <!-- Discount pill -->
+                    <% if (dessert.discount > 0) { %>
+                        <div class="discount-badge"><%= dessert.discount %>% OFF</div>
+                    <% } %>
+
                     <div class="dessert-image">
                         <img src="<%= dessert.imageURL %>" alt="<%= dessert.name %>">
-                        <% if (dessert.discount > 0) { %>
-                            <div class="discount-badge"><%= dessert.discount %>% OFF</div>
-                        <% } %>
-                        <% if (dessert.price >= 1000) { %>
-                            <div class="free-delivery-badge">FREE Delivery</div>
-                        <% } %>
                     </div>
+
                     <div class="dessert-info">
                         <h3 class="dessert-name"><%= dessert.name %></h3>
-                        <p class="dessert-description"><%= dessert.description %></p>
-                        
+
                         <div class="rating-section">
                             <div class="rating-stars" data-rating="<%= dessert.rating %>">
                                 <i class="fas fa-star"></i>
@@ -48,7 +52,7 @@
                         </div>
                         
                         <div class="price-section">
-                            <span class="dessert-price current-price">₹<%= dessert.price.toFixed(2) %></span>
+                            <span class="current-price">₹<%= dessert.price.toFixed(2) %></span>
                             <% if (dessert.originalPrice && dessert.originalPrice > dessert.price) { %>
                                 <span class="original-price">₹<%= dessert.originalPrice.toFixed(2) %></span>
                                 <span class="discount-percent"><%= dessert.discount %>% off</span>
@@ -61,7 +65,7 @@
                                     data-name="<%= dessert.name %>" 
                                     data-price="<%= dessert.price %>" 
                                     data-image="<%= dessert.imageURL %>">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                                <i class="fas fa-shopping-cart"></i> Add
                             </button>
                             <button class="review-btn" 
                                     data-id="<%= dessert._id %>" 

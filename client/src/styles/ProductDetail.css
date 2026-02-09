@@ -133,7 +133,7 @@
   gap: 12px;
 }
 
-.current-price {
+.price-section .current-price {
   font-size: 36px;
   font-weight: 700;
   color: #ff6161;
@@ -473,7 +473,7 @@
     font-size: 24px;
   }
 
-  .current-price {
+  .price-section .current-price {
     font-size: 28px;
   }
 

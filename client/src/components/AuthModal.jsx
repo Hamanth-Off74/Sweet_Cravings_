@@ -11,6 +11,19 @@ function AuthModal({ isOpen, onClose, onAuthSuccess }) {
   });
 
   useEffect(() => {
+    // Prevent body scrolling when modal is open
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     // Load Google Sign-In script
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';

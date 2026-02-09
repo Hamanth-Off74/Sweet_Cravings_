@@ -79,7 +79,7 @@
 </div>
 
 
-<div class="products-section" id="features">
+<div class="products-section menu-modern" id="features">
     <div class="container">
         <h2 class="section-title">Featured Desserts</h2>
         
@@ -87,37 +87,38 @@
              <% if (typeof desserts !== 'undefined' && desserts.length > 0) { %>
                 <% desserts.forEach(dessert => { %>
                     <div class="dessert-card" data-category="<%= dessert.category.toLowerCase() %>" data-price="<%= dessert.price %>" data-rating="<%= dessert.rating %>">
+                        <!-- Wishlist heart -->
+                        <button class="add-to-wishlist-btn" data-id="<%= dessert._id %>">
+                            <i class="fas fa-heart"></i>
+                        </button>
+
+                        <!-- Discount pill -->
+                        <% if (dessert.discount > 0) { %>
+                            <div class="discount-badge"><%= dessert.discount %>% OFF</div>
+                        <% } %>
+
                         <div class="dessert-image">
                             <img src="<%= dessert.imageURL %>" alt="<%= dessert.name %>">
-                            <% if (dessert.discount > 0) { %>
-                                <div class="discount-badge"><%= dessert.discount %>% OFF</div>
-                            <% } %>
-                             <button class="add-to-wishlist-btn" data-id="<%= dessert._id %>">
-                                <i class="fas fa-heart"></i>
-                            </button>
                         </div>
+
                         <div class="dessert-info">
                             <h3 class="dessert-name"><%= dessert.name %></h3>
-                            <p class="dessert-description"><%= dessert.description.substring(0, 60) %>...</p>
-                            
+
                             <div class="rating-section">
-                                <div class="star-rating" data-rating="<%= dessert.rating %>">
-                                    <span class="rating-value"><i class="fas fa-star"></i> <%= dessert.rating %></span>
+                                <div class="rating-stars" data-rating="<%= dessert.rating %>">
+                                    <i class="fas fa-star"></i>
+                                    <%= dessert.rating %>
                                 </div>
-                                <span class="reviews-count">(<%= dessert.reviews %>)</span>
+                                <span class="reviews">(<%= dessert.reviews %> reviews)</span>
                             </div>
                             
                             <div class="price-section">
                                 <span class="current-price">₹<%= dessert.price.toFixed(2) %></span>
                                 <% if (dessert.originalPrice && dessert.originalPrice > dessert.price) { %>
                                     <span class="original-price">₹<%= dessert.originalPrice.toFixed(2) %></span>
+                                    <span class="discount-percent"><%= dessert.discount %>% off</span>
                                 <% } %>
                             </div>
-                             <% if (dessert.deliveryTime) { %>
-                                <div class="delivery-info">
-                                    <i class="fas fa-truck"></i> Delivery in <%= dessert.deliveryTime %>
-                                </div>
-                            <% } %>
                             
                             <div class="card-actions">
                                 <button class="add-to-cart-btn" 
@@ -125,9 +126,11 @@
                                         data-name="<%= dessert.name %>" 
                                         data-price="<%= dessert.price %>" 
                                         data-image="<%= dessert.imageURL %>">
-                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                    <i class="fas fa-shopping-cart"></i> Add
                                 </button>
-                                <button class="view-reviews-btn" data-id="<%= dessert._id %>">Reviews</button>
+                                <button class="review-btn" data-id="<%= dessert._id %>">
+                                    <i class="fas fa-star"></i> Reviews
+                                </button>
                             </div>
                         </div>
                     </div>

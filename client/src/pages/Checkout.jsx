@@ -88,7 +88,20 @@ function Checkout() {
     };
 
     try {
-      // Create Razorpay order
+      // Handle Cash on Delivery
+      if (formData.paymentMethod === 'cod') {
+        const response = await axios.post('/api/order', orderData);
+        
+        if (response.data.success) {
+          clearCart();
+          navigate('/confirmation');
+        } else {
+          alert('Failed to place order: ' + response.data.error);
+        }
+        return;
+      }
+
+      // Handle Razorpay payment
       const response = await axios.post('/api/create-razorpay-order', {
         amount: total,
         currency: 'INR',

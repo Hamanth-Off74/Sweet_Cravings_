@@ -148,7 +148,7 @@
   flex-wrap: wrap;
 }
 
-.current-price {
+.quickview-price .current-price {
   font-size: 32px;
   font-weight: 700;
   color: #ff6161;

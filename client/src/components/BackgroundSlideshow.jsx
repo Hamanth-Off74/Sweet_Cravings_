@@ -105,9 +105,9 @@ function BackgroundSlideshow() {
         <div key={slideIndex} className={`bg-slide ${slideIndex === 0 ? 'active' : ''}`}>
           <div className="bg-slide-item">
             {slide.map((item, itemIndex) => (
-              <div key={itemIndex} className="bg-product-card">
-                <img src={item.img} alt={item.name} />
-                <div className="bg-item-info">
+              <div key={itemIndex} className="bg-product-card" style={{ background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(10px)', boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)', border: '1px solid rgba(255, 255, 255, 0.3)' }}>
+                <img src={item.img} alt={item.name} style={{ filter: 'blur(0px)' }} />
+                <div className="bg-item-info" style={{ background: 'transparent' }}>
                   <span className="bg-discount-badge">{item.discount}</span>
                   <h3>{item.name}</h3>
                   <p>{item.desc}</p>

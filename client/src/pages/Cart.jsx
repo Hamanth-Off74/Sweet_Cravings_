@@ -12,7 +12,6 @@ function Cart() {
   return (
     <div className="cart-section">
       <div className="container">
-        <h1 className="section-title">Shopping Cart</h1>
         
         <div id="cart-content">
           {cart.length === 0 ? (
@@ -20,13 +19,15 @@ function Cart() {
               <i className="fas fa-shopping-cart"></i>
               <h2>Your cart is empty</h2>
               <p>Add some delicious desserts to get started!</p>
-              <Link to="/menu" className="btn">Browse Menu</Link>
+              <Link to="/menu" className="btn btn-primary">Browse Menu</Link>
             </div>
           ) : (
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 350px', gap: '30px', alignItems: 'start', maxWidth: '1200px', margin: '0 auto'}}>
+            <>
+            <h1 className="section-title">Shopping Cart</h1>
+            <div className="cart-layout" style={{display: 'grid', gridTemplateColumns: '1fr 350px', gap: '30px', alignItems: 'start', maxWidth: '1200px', margin: '0 auto'}}>
               <div style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
                 {cart.map(item => (
-                  <div key={item.id} style={{
+                  <div key={item.id} className="cart-item" style={{
                     background: '#fff',
                     padding: '15px',
                     borderRadius: '8px',
@@ -35,7 +36,7 @@ function Cart() {
                     gap: '15px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                   }}>
-                    <img src={item.image} alt={item.name} style={{
+                    <img src={item.imageURL || item.image} alt={item.name} style={{
                       width: '80px',
                       height: '80px',
                       objectFit: 'cover',
@@ -82,7 +83,7 @@ function Cart() {
                 ))}
               </div>
               
-              <div style={{
+              <div className="order-summary" style={{
                 background: '#fff',
                 padding: '25px',
                 borderRadius: '12px',
@@ -127,6 +128,7 @@ function Cart() {
                 </Link>
               </div>
             </div>
+            </>
           )}
         </div>
       </div>

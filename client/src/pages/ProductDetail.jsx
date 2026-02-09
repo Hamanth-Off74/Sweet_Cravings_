@@ -43,7 +43,7 @@ function ProductDetail() {
       id: product._id,
       name: product.name,
       price: product.price,
-      image: product.imageURL,
+      imageURL: product.imageURL,
       quantity: quantity
     });
   };

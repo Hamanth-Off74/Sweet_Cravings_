@@ -2,6 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
 const cors = require('cors');
+const { AssemblyAI } = require('assemblyai');
+const multer = require('multer');
+const fs = require('fs').promises;
+
+// Configure multer for audio file uploads
+const upload = multer({
+    dest: 'uploads/',
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+});
 
 // Static dessert data with prices between 40 and 200
 const desserts = [
@@ -15,7 +24,7 @@ const desserts = [
         discount: 18,
         rating: 4.8,
         reviews: 312,
-    imageURL: '/images/cakes/chocolate-cake.jpg',
+        imageURL: '/images/cakes/chocolate-cake.jpg',
         category: 'Cakes'
     },
     {
@@ -185,7 +194,7 @@ const desserts = [
         discount: 13,
         rating: 4.8,
         reviews: 185,
-    imageURL: '/images/pies/Key Lime-Pies.jpg',
+        imageURL: '/images/pies/Key Lime-Pies.jpg',
         category: 'Pies'
     },
     // Italian Category
@@ -493,11 +502,21 @@ router.post('/api/order', async (req, res) => {
             tax: orderData.tax,
             total: orderData.total,
             paymentMethod: orderData.paymentMethod,
-            paymentStatus: orderData.paymentMethod === 'cash' ? 'pending' : 'paid',
+            paymentStatus: (orderData.paymentMethod === 'cash' || orderData.paymentMethod === 'cod') ? 'pending' : 'paid',
             orderStatus: 'pending'
         });
 
         await newOrder.save();
+        
+        console.log('Order Saved to MongoDB:');
+        console.log('==========================================');
+        console.log(`Order ID: ${newOrder.orderId}`);
+        console.log(`Customer: ${newOrder.customer.firstName} ${newOrder.customer.lastName}`);
+        console.log(`Email: ${newOrder.customer.email}`);
+        console.log(`Payment Method: ${newOrder.paymentMethod}`);
+        console.log(`Total: ₹${newOrder.total.toFixed(2)}`);
+        console.log('==========================================\n');
+        
         res.json({ success: true, orderId: newOrder.orderId });
     } catch (error) {
         console.error('Error creating order:', error);
@@ -523,9 +542,9 @@ router.post('/api/create-razorpay-order', async (req, res) => {
         console.log('Creating Razorpay order with options:', options);
 
         const order = await req.app.locals.razorpay.orders.create(options);
-        
+
         console.log('Razorpay order created successfully:', order.id);
-        
+
         res.json({
             success: true,
             order_id: order.id,
@@ -535,10 +554,10 @@ router.post('/api/create-razorpay-order', async (req, res) => {
         });
     } catch (error) {
         console.error('Razorpay order creation error:', error);
-        res.status(500).json({ 
-            success: false, 
+        res.status(500).json({
+            success: false,
             error: 'Failed to create payment order',
-            message: error.message 
+            message: error.message
         });
     }
 });
@@ -553,7 +572,7 @@ router.post('/api/verify-payment', async (req, res) => {
         // const generated_signature = crypto.createHmac('sha256', 'iou4q509iexeJOlJNCpq7gBd')
         //     .update(razorpay_order_id + '|' + razorpay_payment_id)
         //     .digest('hex');
-        
+
         // if (generated_signature === razorpay_signature) {
         //     // Payment verified successfully
         // }
@@ -610,4 +629,632 @@ router.post('/api/verify-payment', async (req, res) => {
     }
 });
 
+// ========================================
+// Voice Ordering Route - AssemblyAI Integration
+// ========================================
+
+/**
+ * Voice Order Route
+ * Handles audio file upload, transcription via AssemblyAI, and order parsing
+ * POST /api/voice-order
+ * Expects: audio file (multipart/form-data)
+ * Returns: { success, transcription, items, message }
+ */
+router.post('/api/voice-order', upload.single('audio'), async (req, res) => {
+    let tempFilePath = null;
+
+    try {
+        // Check if audio file was uploaded
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                error: 'No audio file provided'
+            });
+        }
+
+        tempFilePath = req.file.path;
+        console.log('Audio file received:', req.file.originalname);
+        console.log('Audio file size:', req.file.size, 'bytes');
+        console.log('Audio file mimetype:', req.file.mimetype);
+        console.log('Audio file path:', tempFilePath);
+
+        // Check if file has content
+        if (req.file.size === 0) {
+            return res.status(400).json({
+                success: false,
+                error: 'Audio file is empty'
+            });
+        }
+
+        // Initialize AssemblyAI client with API key from environment
+        const assemblyai = new AssemblyAI({
+            apiKey: process.env.ASSEMBLYAI_KEY
+        });
+
+        if (!process.env.ASSEMBLYAI_KEY) {
+            throw new Error('ASSEMBLYAI_KEY not configured in environment variables');
+        }
+
+        // Transcribe the audio file
+        console.log('Sending audio to AssemblyAI for transcription...');
+        console.log('Using API Key:', process.env.ASSEMBLYAI_KEY ? 'Key present (length: ' + process.env.ASSEMBLYAI_KEY.length + ')' : 'Key missing');
+        console.log('Audio file path:', tempFilePath);
+
+        const transcript = await assemblyai.transcripts.transcribe({
+            audio: tempFilePath
+        });
+
+        console.log('Transcription Status:', transcript.status);
+        console.log('Transcription ID:', transcript.id);
+        console.log('Transcription Text:', transcript.text);
+        console.log('Full Transcript Object:', JSON.stringify(transcript, null, 2));
+
+        if (transcript.status === 'error') {
+            throw new Error('Transcription failed: ' + (transcript.error || 'Check AssemblyAI dashboard'));
+        }
+
+        if (!transcript.text) {
+            throw new Error('Transcription returned empty text. Audio might be too short, silent, or in unsupported format.');
+        }
+
+        // Parse the transcription to extract dessert items
+        const parsedOrder = parseDessertOrder(transcript.text, desserts);
+
+        // Clean up: Delete the temporary audio file
+        await fs.unlink(tempFilePath);
+        tempFilePath = null;
+
+        // Return results
+        res.json({
+            success: true,
+            transcription: transcript.text,
+            items: parsedOrder.items,
+            message: parsedOrder.message,
+            confidence: transcript.confidence
+        });
+
+    } catch (error) {
+        console.error('Voice order processing error:', error);
+
+        // Clean up temp file if it exists
+        if (tempFilePath) {
+            try {
+                await fs.unlink(tempFilePath);
+            } catch (cleanupError) {
+                console.error('Error cleaning up temp file:', cleanupError);
+            }
+        }
+
+        res.status(500).json({
+            success: false,
+            error: 'Failed to process voice order',
+            message: error.message
+        });
+    }
+});
+
+/**
+ * Parse transcribed text to extract dessert items and quantities
+ * Uses fuzzy matching to identify desserts from the menu
+ * @param {string} text - Transcribed text from speech
+ * @param {Array} availableDesserts - Array of dessert objects
+ * @returns {Object} - { items: Array, message: string }
+ */
+function parseDessertOrder(text, availableDesserts) {
+    const items = [];
+    const lowerText = text.toLowerCase();
+
+    console.log('Parsing order from text:', text);
+
+    // Common quantity words and their numeric equivalents
+    const quantityMap = {
+        'one': 1, 'a': 1, 'an': 1,
+        'two': 2, 'double': 2, 'couple': 2,
+        'three': 3, 'triple': 3,
+        'four': 4, 'five': 5, 'six': 6,
+        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10
+    };
+
+    // Split text into sentences/phrases
+    const phrases = lowerText.split(/[,;.!?]|and|also|plus/);
+
+    availableDesserts.forEach(dessert => {
+        const dessertNameLower = dessert.name.toLowerCase();
+        const dessertWords = dessertNameLower.split(' ');
+
+        // Check if dessert name or key words appear in text
+        let isFound = false;
+        let quantity = 1;
+
+        phrases.forEach(phrase => {
+            const trimmedPhrase = phrase.trim();
+
+            // Full name match or partial match (at least 2 words for multi-word desserts)
+            if (trimmedPhrase.includes(dessertNameLower) ||
+                (dessertWords.length > 1 && dessertWords.filter(word => trimmedPhrase.includes(word)).length >= 2) ||
+                (dessertWords.length === 1 && trimmedPhrase.includes(dessertWords[0]))) {
+
+                isFound = true;
+
+                // Extract quantity from the phrase
+                const words = trimmedPhrase.split(' ');
+
+                // Look for numeric quantities
+                for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
+                    const numericValue = parseInt(word);
+
+                    if (!isNaN(numericValue) && numericValue > 0 && numericValue <= 20) {
+                        quantity = numericValue;
+                        break;
+                    }
+
+                    // Look for word quantities
+                    if (quantityMap[word]) {
+                        quantity = quantityMap[word];
+                        break;
+                    }
+                }
+            }
+        });
+
+        if (isFound) {
+            items.push({
+                _id: dessert._id,
+                name: dessert.name,
+                price: dessert.price,
+                quantity: quantity,
+                imageURL: dessert.imageURL
+            });
+            console.log(`Detected: ${quantity}x ${dessert.name}`);
+        }
+    });
+
+    let message = '';
+    if (items.length === 0) {
+        message = 'No desserts detected in your order. Please try again with clearer item names.';
+    } else if (items.length === 1) {
+        message = `Found 1 item: ${items[0].quantity}x ${items[0].name}`;
+    } else {
+        message = `Found ${items.length} items: ${items.map(item => `${item.quantity}x ${item.name}`).join(', ')}`;
+    }
+
+    return { items, message };
+}
+
+// ========================================
+// Admin Authentication Routes
+// ========================================
+
+const Admin = require('../models/Admin');
+const Dessert = require('../models/Dessert');
+const Offer = require('../models/Offer');
+
+// Admin credentials (for demo - in production use proper hashing)
+const ADMIN_CREDENTIALS = {
+    username: process.env.ADMIN_USERNAME || 'admin',
+    password: process.env.ADMIN_PASSWORD || 'sweetcravings123',
+    email: process.env.ADMIN_EMAIL || 'admin@sweetcravings.com'
+};
+
+// Simple session store (for demo - use Redis/JWT in production)
+const adminSessions = new Map();
+
+// Admin Login
+router.post('/api/admin/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // Validate credentials
+        if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+            // Generate session token
+            const sessionToken = 'admin_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+
+            // Store session
+            adminSessions.set(sessionToken, {
+                username,
+                loginTime: new Date(),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+            });
+
+            res.json({
+                success: true,
+                message: 'Login successful',
+                token: sessionToken,
+                admin: {
+                    username: ADMIN_CREDENTIALS.username,
+                    email: ADMIN_CREDENTIALS.email
+                }
+            });
+        } else {
+            res.status(401).json({
+                success: false,
+                error: 'Invalid username or password'
+            });
+        }
+    } catch (error) {
+        console.error('Admin login error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Login failed'
+        });
+    }
+});
+
+// Admin Logout
+router.post('/api/admin/logout', (req, res) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (token && adminSessions.has(token)) {
+        adminSessions.delete(token);
+    }
+
+    res.json({ success: true, message: 'Logged out successfully' });
+});
+
+// Verify Admin Session
+router.get('/api/admin/verify', (req, res) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'No token provided' });
+    }
+
+    const session = adminSessions.get(token);
+
+    if (!session) {
+        return res.status(401).json({ success: false, error: 'Invalid session' });
+    }
+
+    if (new Date() > session.expiresAt) {
+        adminSessions.delete(token);
+        return res.status(401).json({ success: false, error: 'Session expired' });
+    }
+
+    res.json({
+        success: true,
+        admin: {
+            username: session.username,
+            email: ADMIN_CREDENTIALS.email
+        }
+    });
+});
+
+// Middleware to verify admin token
+const verifyAdminToken = (req, res, next) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+
+    const session = adminSessions.get(token);
+
+    if (!session || new Date() > session.expiresAt) {
+        adminSessions.delete(token);
+        return res.status(401).json({ success: false, error: 'Session expired' });
+    }
+
+    req.admin = session;
+    next();
+};
+
+// ========================================
+// Admin Dessert Management Routes
+// ========================================
+
+// Configure multer for dessert image uploads
+const dessertImageStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/uploads/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = file.originalname.split('.').pop();
+        cb(null, 'dessert-' + uniqueSuffix + '.' + ext);
+    }
+});
+
+const dessertImageUpload = multer({
+    storage: dessertImageStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed'));
+        }
+    }
+});
+
+// Get all desserts (admin view - includes inactive)
+router.get('/api/admin/desserts', verifyAdminToken, (req, res) => {
+    // Return all desserts including static ones
+    res.json(desserts.map((d, index) => ({
+        ...d,
+        _id: d._id || String(index + 1),
+        isActive: d.isActive !== false
+    })));
+});
+
+// Add new dessert
+router.post('/api/admin/desserts', verifyAdminToken, (req, res) => {
+    try {
+        const { name, description, price, originalPrice, discount, category, imageURL, rating, reviews } = req.body;
+
+        // Generate new ID
+        const newId = String(desserts.length + 1);
+
+        const newDessert = {
+            _id: newId,
+            name,
+            description,
+            price: parseFloat(price),
+            originalPrice: parseFloat(originalPrice) || parseFloat(price),
+            discount: parseInt(discount) || 0,
+            rating: parseFloat(rating) || 0,
+            reviews: parseInt(reviews) || 0,
+            imageURL: imageURL || '/images/default-dessert.jpg',
+            category,
+            isActive: true
+        };
+
+        desserts.push(newDessert);
+
+        res.json({
+            success: true,
+            message: 'Dessert added successfully',
+            dessert: newDessert
+        });
+    } catch (error) {
+        console.error('Error adding dessert:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update dessert
+router.put('/api/admin/desserts/:id', verifyAdminToken, (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        const index = desserts.findIndex(d => d._id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ success: false, error: 'Dessert not found' });
+        }
+
+        // Update dessert
+        desserts[index] = {
+            ...desserts[index],
+            ...updates,
+            price: updates.price ? parseFloat(updates.price) : desserts[index].price,
+            originalPrice: updates.originalPrice ? parseFloat(updates.originalPrice) : desserts[index].originalPrice,
+            discount: updates.discount !== undefined ? parseInt(updates.discount) : desserts[index].discount
+        };
+
+        res.json({
+            success: true,
+            message: 'Dessert updated successfully',
+            dessert: desserts[index]
+        });
+    } catch (error) {
+        console.error('Error updating dessert:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete dessert
+router.delete('/api/admin/desserts/:id', verifyAdminToken, (req, res) => {
+    try {
+        const { id } = req.params;
+        const index = desserts.findIndex(d => d._id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ success: false, error: 'Dessert not found' });
+        }
+
+        // Remove dessert
+        const deleted = desserts.splice(index, 1)[0];
+
+        res.json({
+            success: true,
+            message: 'Dessert deleted successfully',
+            dessert: deleted
+        });
+    } catch (error) {
+        console.error('Error deleting dessert:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Upload dessert image
+router.post('/api/admin/upload-image', verifyAdminToken, dessertImageUpload.single('image'), (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: 'No image uploaded' });
+        }
+
+        const imageURL = '/images/uploads/' + req.file.filename;
+
+        res.json({
+            success: true,
+            message: 'Image uploaded successfully',
+            imageURL
+        });
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ========================================
+// Admin Offers Management Routes
+// ========================================
+
+// In-memory offers store (for demo)
+let offers = [];
+
+// Get all offers
+router.get('/api/admin/offers', verifyAdminToken, (req, res) => {
+    res.json(offers);
+});
+
+// Get active offers (public)
+router.get('/api/offers', (req, res) => {
+    const now = new Date();
+    const activeOffers = offers.filter(offer =>
+        offer.isActive &&
+        new Date(offer.startDate) <= now &&
+        new Date(offer.endDate) >= now
+    );
+    res.json(activeOffers);
+});
+
+// Create offer
+router.post('/api/admin/offers', verifyAdminToken, (req, res) => {
+    try {
+        const { title, description, discountType, discountValue, code, applicableCategories, startDate, endDate, minOrderAmount, maxDiscount } = req.body;
+
+        const newOffer = {
+            _id: 'offer_' + Date.now(),
+            title,
+            description: description || '',
+            discountType,
+            discountValue: parseFloat(discountValue),
+            code: code ? code.toUpperCase() : null,
+            applicableCategories: applicableCategories || ['All'],
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+            minOrderAmount: parseFloat(minOrderAmount) || 0,
+            maxDiscount: maxDiscount ? parseFloat(maxDiscount) : null,
+            isActive: true,
+            usedCount: 0,
+            createdAt: new Date()
+        };
+
+        offers.push(newOffer);
+
+        res.json({
+            success: true,
+            message: 'Offer created successfully',
+            offer: newOffer
+        });
+    } catch (error) {
+        console.error('Error creating offer:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update offer
+router.put('/api/admin/offers/:id', verifyAdminToken, (req, res) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        const index = offers.findIndex(o => o._id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ success: false, error: 'Offer not found' });
+        }
+
+        offers[index] = {
+            ...offers[index],
+            ...updates,
+            discountValue: updates.discountValue ? parseFloat(updates.discountValue) : offers[index].discountValue,
+            startDate: updates.startDate ? new Date(updates.startDate) : offers[index].startDate,
+            endDate: updates.endDate ? new Date(updates.endDate) : offers[index].endDate
+        };
+
+        res.json({
+            success: true,
+            message: 'Offer updated successfully',
+            offer: offers[index]
+        });
+    } catch (error) {
+        console.error('Error updating offer:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete offer
+router.delete('/api/admin/offers/:id', verifyAdminToken, (req, res) => {
+    try {
+        const { id } = req.params;
+        const index = offers.findIndex(o => o._id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ success: false, error: 'Offer not found' });
+        }
+
+        const deleted = offers.splice(index, 1)[0];
+
+        res.json({
+            success: true,
+            message: 'Offer deleted successfully',
+            offer: deleted
+        });
+    } catch (error) {
+        console.error('Error deleting offer:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ========================================
+// Admin Order Management Routes (Enhanced)
+// ========================================
+
+// Update order status
+router.put('/api/admin/orders/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const { orderStatus, paymentStatus } = req.body;
+
+        const order = await Order.findOneAndUpdate(
+            { orderId },
+            {
+                orderStatus: orderStatus,
+                paymentStatus: paymentStatus,
+                updatedAt: new Date()
+            },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).json({ success: false, error: 'Order not found' });
+        }
+
+        res.json({
+            success: true,
+            message: 'Order updated successfully',
+            order
+        });
+    } catch (error) {
+        console.error('Error updating order:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete order
+router.delete('/api/admin/orders/:orderId', async (req, res) => {
+    try {
+        const { orderId } = req.params;
+
+        const order = await Order.findOneAndDelete({ orderId });
+
+        if (!order) {
+            return res.status(404).json({ success: false, error: 'Order not found' });
+        }
+
+        res.json({
+            success: true,
+            message: 'Order deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 module.exports = router;
+
