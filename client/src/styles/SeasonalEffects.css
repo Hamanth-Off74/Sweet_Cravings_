@@ -69,20 +69,4 @@
     100% { opacity: 0; transform: scale(0.5); }
 }
 
-/* ===========================
-   JUNE/JULY: RAIN (Monsoon)
-   =========================== */
-.raindrop {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.6);
-    width: 2px;
-    height: 15px;
-    top: -20px;
-    animation: rainFall linear infinite;
-}
 
-@keyframes rainFall {
-    to {
-        transform: translateY(105vh);
-    }
-}

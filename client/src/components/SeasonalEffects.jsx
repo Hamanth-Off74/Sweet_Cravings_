@@ -48,16 +48,6 @@ const SeasonalEffects = () => {
         type: 'sparkle'
       }));
     }
-    // June (5) or July (6) - Rain
-    else if (currentMonth === 5 || currentMonth === 6) {
-      newElements = Array.from({ length: 60 }).map((_, i) => ({
-        id: i,
-        left: Math.random() * 100 + '%',
-        animationDuration: Math.random() * 1 + 0.5 + 's',
-        animationDelay: Math.random() * 2 + 's',
-        type: 'rain'
-      }));
-    }
 
     setElements(newElements);
   }, []);
@@ -106,18 +96,6 @@ const SeasonalEffects = () => {
             top: el.top,
             width: el.size,
             height: el.size,
-            animationDuration: el.animationDuration,
-            animationDelay: el.animationDelay
-          }}
-        />
-      ))}
-
-      {(month === 5 || month === 6) && elements.map(el => (
-        <div 
-          key={el.id} 
-          className="raindrop" 
-          style={{
-            left: el.left,
             animationDuration: el.animationDuration,
             animationDelay: el.animationDelay
           }}
