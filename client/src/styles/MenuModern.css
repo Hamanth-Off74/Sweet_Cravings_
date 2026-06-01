@@ -1,12 +1,12 @@
 /* Modern Menu Card Design */
 .menu-modern .dessert-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-  gap: 20px;
-  max-width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 24px;
+  max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  padding: 0;
+  padding: 0 16px;
   align-items: start;
   justify-content: center;
 }
@@ -81,9 +81,10 @@
 
 /* Image */
 .menu-modern .dessert-image {
-  aspect-ratio: auto;
+  aspect-ratio: 4 / 3;
   width: 100%;
-  height: 140px;
+  height: 160px;
+  max-height: 180px;
   padding-bottom: 0;
   overflow: hidden;
   position: relative;

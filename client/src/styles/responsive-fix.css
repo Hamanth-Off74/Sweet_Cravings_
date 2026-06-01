@@ -1,48 +1,53 @@
 /* ===========================
-   RESPONSIVE FIX - Proper Scaling
+   RESPONSIVE BREAKPOINTS ONLY
+   Full design system is in index.css
    =========================== */
 
-/* Ensure proper box model */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+/* Mobile category nav scroll */
+@media screen and (max-width: 768px) {
+  .category-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-links {
+    flex-wrap: nowrap !important;
+    width: max-content;
+    min-width: 100%;
+    padding: 10px 16px;
+  }
+
+  .category-link {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Hide location on mobile */
+  .location-selector { display: none !important; }
+
+  /* Auth buttons compact */
+  .auth-buttons .btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Search full width */
+  .search-bar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Top bar minimal */
+  .top-links span:not(:first-child) { display: none; }
 }
 
-/* Root responsive sizing */
-:root {
-  /* Use clamp for fluid typography that scales between min and max */
-  --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  /* 12-14px */
-  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
-  /* 14-16px */
-  --font-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
-  /* 16-18px */
-  --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
-  /* 18-20px */
-  --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
-  /* 20-24px */
-  --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-  /* 24-32px */
-  --font-size-3xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
-  /* 32-48px */
-  --font-size-4xl: clamp(2.5rem, 2rem + 2.5vw, 3.5rem);
-  /* 40-56px */
-
-  /* Spacing scale */
-  --spacing-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
-  --spacing-sm: clamp(0.5rem, 0.4rem + 0.5vw, 1rem);
-  --spacing-md: clamp(1rem, 0.8rem + 1vw, 1.5rem);
-  --spacing-lg: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
-  --spacing-xl: clamp(2rem, 1.5rem + 2.5vw, 4rem);
-
-  /* Container max-widths */
-  --container-sm: 640px;
-  --container-md: 768px;
-  --container-lg: 1024px;
-  --container-xl: 1280px;
-  --container-2xl: 1400px;
+@media screen and (max-width: 480px) {
+  .navbar .container {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
 }
+
 
 /* Responsive container */
 .container,
@@ -160,12 +165,11 @@ a.btn {
   display: flex;
   flex-direction: column;
   height: auto;
-  min-height: auto;
-  max-height: none;
+  min-height: 320px;
+  max-height: 420px;
 }
 
 .product-card img,
-.dessert-card img,
 .item-card img {
   width: 100%;
   height: 100%;
@@ -174,15 +178,17 @@ a.btn {
   flex-shrink: 0;
 }
 
-/* Enforce 1:1 aspect ratio for dessert images */
-.dessert-image {
-  aspect-ratio: 1 / 1;
+/* Enforce proper sizing for dessert images */
+.menu-modern .dessert-image {
+  aspect-ratio: 4 / 3;
   width: 100%;
+  height: auto;
+  max-height: 180px;
   position: relative;
   overflow: hidden;
 }
 
-.dessert-image img {
+.menu-modern .dessert-image img {
   position: absolute;
   top: 0;
   left: 0;

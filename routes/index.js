@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
+const Dessert = require('../models/Dessert');
 const cors = require('cors');
 const { AssemblyAI } = require('assemblyai');
 const multer = require('multer');
@@ -36,7 +37,7 @@ const desserts = [
         discount: 17,
         rating: 4.7,
         reviews: 290,
-        imageURL: '/images/cakes/red velvet-cake.jpg',
+        imageURL: '/images/cakes/red%20velvet-cake.jpg',
         category: 'Cakes'
     },
     {
@@ -48,7 +49,7 @@ const desserts = [
         discount: 14,
         rating: 4.9,
         reviews: 450,
-        imageURL: '/images/cakes/black forest-cake.jpg',
+        imageURL: '/images/cakes/black%20forest-cake.jpg',
         category: 'Cakes'
     },
     {
@@ -72,7 +73,7 @@ const desserts = [
         discount: 18,
         rating: 4.6,
         reviews: 255,
-        imageURL: '/images/cakes/pineapple pastry-cake.jpg',
+        imageURL: '/images/cakes/pineapple%20pastry-cake.jpg',
         category: 'Cakes'
     },
     // Cookies Category
@@ -97,7 +98,7 @@ const desserts = [
         discount: 18,
         rating: 4.5,
         reviews: 340,
-        imageURL: '/images/cookies/oatmeal raisin-cookies.jpg',
+        imageURL: '/images/cookies/oatmeal%20raisin-cookies.jpg',
         category: 'Cookies'
     },
     {
@@ -109,7 +110,7 @@ const desserts = [
         discount: 17,
         rating: 4.8,
         reviews: 560,
-        imageURL: '/images/cookies/double chocolate-cookies.jpg',
+        imageURL: '/images/cookies/double%20chocolate-cookies.jpg',
         category: 'Cookies'
     },
     {
@@ -194,7 +195,7 @@ const desserts = [
         discount: 13,
         rating: 4.8,
         reviews: 185,
-        imageURL: '/images/pies/Key Lime-Pies.jpg',
+        imageURL: '/images/pies/Key%20Lime-Pies.jpg',
         category: 'Pies'
     },
     // Italian Category
@@ -268,7 +269,7 @@ const desserts = [
         discount: 20,
         rating: 4.8,
         reviews: 650,
-        imageURL: '/images/brownies/Chewy Fudgy-Brownies.jpg',
+        imageURL: '/images/brownies/Chewy%20Fudgy-Brownies.jpg',
         category: 'Brownies'
     },
     {
@@ -463,9 +464,18 @@ function getLimitedDesserts(desserts, limit) {
 // API Routes for React (Must be FIRST!)
 // ========================================
 
-// API: Get all desserts
-router.get('/api/desserts', (req, res) => {
-    res.json(desserts);
+// API: Get all desserts (public) - combines static + DB desserts
+router.get('/api/desserts', async (req, res) => {
+    try {
+        const dbDesserts = await Dessert.find({ isActive: true });
+        const convertedDbDesserts = dbDesserts.map(doc => doc.toObject());
+        const allDesserts = [...desserts, ...convertedDbDesserts];
+        res.json(allDesserts);
+    } catch (error) {
+        console.error('Error fetching desserts (public):', error);
+        // Fallback to static desserts if DB fails
+        res.json(desserts);
+    }
 });
 
 // API: Get user orders
@@ -827,8 +837,8 @@ function parseDessertOrder(text, availableDesserts) {
 // ========================================
 
 const Admin = require('../models/Admin');
-const Dessert = require('../models/Dessert');
 const Offer = require('../models/Offer');
+
 
 // Admin credentials (for demo - in production use proper hashing)
 const ADMIN_CREDENTIALS = {
@@ -968,25 +978,27 @@ const dessertImageUpload = multer({
 });
 
 // Get all desserts (admin view - includes inactive)
-router.get('/api/admin/desserts', verifyAdminToken, (req, res) => {
-    // Return all desserts including static ones
-    res.json(desserts.map((d, index) => ({
-        ...d,
-        _id: d._id || String(index + 1),
-        isActive: d.isActive !== false
-    })));
+router.get('/api/admin/desserts', verifyAdminToken, async (req, res) => {
+    try {
+        // Fetch desserts from MongoDB
+        const dbDesserts = await Dessert.find({});
+        // Convert to plain objects
+        const convertedDbDesserts = dbDesserts.map(doc => doc.toObject());
+        // Combine with static desserts
+        const allDesserts = [...desserts, ...convertedDbDesserts];
+        res.json(allDesserts);
+    } catch (error) {
+        console.error('Error fetching desserts:', error);
+        res.json(desserts);
+    }
 });
 
 // Add new dessert
-router.post('/api/admin/desserts', verifyAdminToken, (req, res) => {
+router.post('/api/admin/desserts', verifyAdminToken, async (req, res) => {
     try {
         const { name, description, price, originalPrice, discount, category, imageURL, rating, reviews } = req.body;
 
-        // Generate new ID
-        const newId = String(desserts.length + 1);
-
-        const newDessert = {
-            _id: newId,
+        const newDessert = new Dessert({
             name,
             description,
             price: parseFloat(price),
@@ -997,9 +1009,9 @@ router.post('/api/admin/desserts', verifyAdminToken, (req, res) => {
             imageURL: imageURL || '/images/default-dessert.jpg',
             category,
             isActive: true
-        };
+        });
 
-        desserts.push(newDessert);
+        await newDessert.save();
 
         res.json({
             success: true,
@@ -1013,30 +1025,34 @@ router.post('/api/admin/desserts', verifyAdminToken, (req, res) => {
 });
 
 // Update dessert
-router.put('/api/admin/desserts/:id', verifyAdminToken, (req, res) => {
+router.put('/api/admin/desserts/:id', verifyAdminToken, async (req, res) => {
     try {
         const { id } = req.params;
         const updates = req.body;
 
-        const index = desserts.findIndex(d => d._id === id);
+        // Try to update in MongoDB
+        let dessert = await Dessert.findByIdAndUpdate(id, updates, { new: true });
 
-        if (index === -1) {
-            return res.status(404).json({ success: false, error: 'Dessert not found' });
+        if (!dessert) {
+            // Fallback to in-memory desserts
+            const index = desserts.findIndex(d => d._id === id);
+            if (index === -1) {
+                return res.status(404).json({ success: false, error: 'Dessert not found' });
+            }
+            desserts[index] = {
+                ...desserts[index],
+                ...updates,
+                price: updates.price ? parseFloat(updates.price) : desserts[index].price,
+                originalPrice: updates.originalPrice ? parseFloat(updates.originalPrice) : desserts[index].originalPrice,
+                discount: updates.discount !== undefined ? parseInt(updates.discount) : desserts[index].discount
+            };
+            dessert = desserts[index];
         }
-
-        // Update dessert
-        desserts[index] = {
-            ...desserts[index],
-            ...updates,
-            price: updates.price ? parseFloat(updates.price) : desserts[index].price,
-            originalPrice: updates.originalPrice ? parseFloat(updates.originalPrice) : desserts[index].originalPrice,
-            discount: updates.discount !== undefined ? parseInt(updates.discount) : desserts[index].discount
-        };
 
         res.json({
             success: true,
             message: 'Dessert updated successfully',
-            dessert: desserts[index]
+            dessert
         });
     } catch (error) {
         console.error('Error updating dessert:', error);
@@ -1045,17 +1061,21 @@ router.put('/api/admin/desserts/:id', verifyAdminToken, (req, res) => {
 });
 
 // Delete dessert
-router.delete('/api/admin/desserts/:id', verifyAdminToken, (req, res) => {
+router.delete('/api/admin/desserts/:id', verifyAdminToken, async (req, res) => {
     try {
         const { id } = req.params;
-        const index = desserts.findIndex(d => d._id === id);
 
-        if (index === -1) {
-            return res.status(404).json({ success: false, error: 'Dessert not found' });
+        // Try to delete from MongoDB
+        let deleted = await Dessert.findByIdAndDelete(id);
+
+        if (!deleted) {
+            // Fallback to in-memory desserts
+            const index = desserts.findIndex(d => d._id === id);
+            if (index === -1) {
+                return res.status(404).json({ success: false, error: 'Dessert not found' });
+            }
+            deleted = desserts.splice(index, 1)[0];
         }
-
-        // Remove dessert
-        const deleted = desserts.splice(index, 1)[0];
 
         res.json({
             success: true,

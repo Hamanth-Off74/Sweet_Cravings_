@@ -8,8 +8,18 @@ const cors = require('cors');
 
 const app = express();
 
+const allowedOrigins = [
+    process.env.CORS_ORIGIN,
+    'http://localhost:3000',
+    'http://localhost:3001'
+].filter(Boolean);
+
 // Enable CORS for React frontend
-app.use(cors());
+app.use(cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // MongoDB Connection
 const dbURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/sweetcravings';

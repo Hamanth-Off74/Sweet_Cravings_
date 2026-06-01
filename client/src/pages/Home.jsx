@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { getFeaturedDesserts, getLimitedDesserts } from '../data/desserts';
+import axios from '../api/axios';
 import OfferBanner from '../components/OfferBanner';
 import '../styles/MenuModern.css';
 
 function Home() {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const [featured] = useState(getFeaturedDesserts());
-  const [desserts] = useState(getLimitedDesserts(5));
+  const [featured, setFeatured] = useState(getFeaturedDesserts());
+  const [desserts, setDesserts] = useState(getLimitedDesserts(5));
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -28,6 +29,36 @@ function Home() {
       document.body.style.overflow = '';
     };
   }, [showWelcome]);
+
+  // Fetch desserts from API so admin-added desserts appear on Home
+  useEffect(() => {
+    const fetchDesserts = async () => {
+      try {
+        const response = await axios.get('/api/desserts');
+        const allDesserts = response.data;
+        if (allDesserts && allDesserts.length > 0) {
+          // Build featured (5 specific items or first 5)
+          const featuredNames = ['Chocolate Cake', 'Cheesecake', 'Fudgy Chocolate Brownie', 'Fruit Tart', 'Chocolate Fudge Brownie Ice Cream'];
+          const featuredItems = featuredNames
+            .map(name => allDesserts.find(d => d.name === name))
+            .filter(Boolean);
+          setFeatured(featuredItems.length > 0 ? featuredItems : allDesserts.slice(0, 5));
+
+          // Build limited set (1 per category, max 5 per category)
+          const limited = {};
+          allDesserts.forEach(d => {
+            if (!limited[d.category]) limited[d.category] = [];
+            if (limited[d.category].length < 5) limited[d.category].push(d);
+          });
+          setDesserts(Object.values(limited).flat());
+        }
+      } catch (error) {
+        console.error('Error fetching desserts for Home:', error);
+        // Keep static fallback
+      }
+    };
+    fetchDesserts();
+  }, []);
 
   useEffect(() => {
     // Auto-advance slideshow

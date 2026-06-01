@@ -16,7 +16,7 @@ Write-Host ""
 
 # Start Backend Server
 Write-Host "🚀 Starting Backend Server (Port 5000)..." -ForegroundColor Yellow
-$backendPath = "c:\Users\Sun Tyres\OneDrive\Desktop\dessert web"
+$backendPath = $PSScriptRoot
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$backendPath'; npm start" -WindowStyle Normal
 
 Write-Host "✅ Backend server starting..." -ForegroundColor Green
@@ -25,7 +25,7 @@ Write-Host ""
 
 # Start React Frontend
 Write-Host "⚛️  Starting React Frontend (Port 3000)..." -ForegroundColor Yellow
-$frontendPath = "c:\Users\Sun Tyres\OneDrive\Desktop\dessert web\client"
+$frontendPath = Join-Path $PSScriptRoot "client"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$frontendPath'; npm run dev" -WindowStyle Normal
 
 Write-Host "✅ React frontend starting..." -ForegroundColor Green

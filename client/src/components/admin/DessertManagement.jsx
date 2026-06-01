@@ -93,17 +93,20 @@ function DessertManagement() {
                 alert('Dessert updated successfully!');
             } else {
                 // Add new dessert
-                await axios.post('/api/admin/desserts', formData, {
+                const response = await axios.post('/api/admin/desserts', formData, {
                     headers: getAuthHeaders()
                 });
+                console.log('New dessert added:', response.data);
                 alert('Dessert added successfully!');
             }
 
-            fetchDesserts();
+            // Wait for desserts to refresh before closing modal
+            await fetchDesserts();
             closeModal();
         } catch (error) {
-            console.error('Error saving dessert:', error);
-            alert('Failed to save dessert');
+            console.error('Error saving dessert:', error.response?.data || error.message);
+            const errorMsg = error.response?.data?.error || error.message || 'Unknown error';
+            alert(`Failed to save dessert: ${errorMsg}`);
         }
     };
 

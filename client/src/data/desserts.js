@@ -22,7 +22,7 @@ export const desserts = [
         discount: 17,
         rating: 4.7,
         reviews: 290,
-        imageURL: '/images/cakes/red velvet-cake.jpg',
+        imageURL: '/images/cakes/red%20velvet-cake.jpg',
         category: 'Cakes',
         customizable: true
     },
@@ -35,7 +35,7 @@ export const desserts = [
         discount: 14,
         rating: 4.9,
         reviews: 450,
-        imageURL: '/images/cakes/black forest-cake.jpg',
+        imageURL: '/images/cakes/black%20forest-cake.jpg',
         category: 'Cakes',
         customizable: true
     },
@@ -61,7 +61,7 @@ export const desserts = [
         discount: 18,
         rating: 4.6,
         reviews: 255,
-        imageURL: '/images/cakes/pineapple pastry-cake.jpg',
+        imageURL: '/images/cakes/pineapple%20pastry-cake.jpg',
         category: 'Cakes'
     },
     // Cookies Category
@@ -86,7 +86,7 @@ export const desserts = [
         discount: 18,
         rating: 4.5,
         reviews: 340,
-        imageURL: '/images/cookies/oatmeal raisin-cookies.jpg',
+        imageURL: '/images/cookies/oatmeal%20raisin-cookies.jpg',
         category: 'Cookies'
     },
     {
@@ -98,7 +98,7 @@ export const desserts = [
         discount: 17,
         rating: 4.8,
         reviews: 560,
-        imageURL: '/images/cookies/double chocolate-cookies.jpg',
+        imageURL: '/images/cookies/double%20chocolate-cookies.jpg',
         category: 'Cookies'
     },
     {
@@ -183,7 +183,7 @@ export const desserts = [
         discount: 13,
         rating: 4.8,
         reviews: 185,
-        imageURL: '/images/pies/Key Lime-Pies.jpg',
+        imageURL: '/images/pies/Key%20Lime-Pies.jpg',
         category: 'Pies'
     },
     // Italian Category
@@ -257,7 +257,7 @@ export const desserts = [
         discount: 20,
         rating: 4.8,
         reviews: 650,
-        imageURL: '/images/brownies/Chewy Fudgy-Brownies.jpg',
+        imageURL: '/images/brownies/Chewy%20Fudgy-Brownies.jpg',
         category: 'Brownies'
     },
     {

@@ -18,6 +18,7 @@ import AdminLogin from './pages/AdminLogin';
 import Orders from './pages/Orders';
 import Wishlist from './pages/Wishlist';
 import ProductDetail from './pages/ProductDetail';
+import CustomizeStudio from './pages/CustomizeStudio';
 import SeasonalEffects from './components/SeasonalEffects';
 import './styles/darkmode.css';
 import './styles/responsive-fix.css';
@@ -56,6 +57,7 @@ function App() {
                   <Route path="/confirmation" element={<Confirmation />} />
                   <Route path="/orders" element={<Orders />} />
                   <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/customize" element={<CustomizeStudio />} />
 
                   {/* Admin Routes */}
                   <Route path="/admin/login" element={<AdminLogin />} />

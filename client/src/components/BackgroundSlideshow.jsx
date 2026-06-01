@@ -4,7 +4,7 @@ function BackgroundSlideshow() {
   useEffect(() => {
     let currentSlide = 0;
     const slides = document.querySelectorAll('.bg-slide');
-    
+
     const showSlide = (n) => {
       slides.forEach(slide => slide.classList.remove('active'));
       currentSlide = (n + slides.length) % slides.length;

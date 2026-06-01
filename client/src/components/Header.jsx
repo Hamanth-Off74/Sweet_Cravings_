@@ -232,6 +232,17 @@ function Header() {
               <Link to="/menu?category=Ice%20Cream" className="category-link">
                 <i className="fas fa-ice-cream"></i> Ice Cream
               </Link>
+              <Link to="/customize" className="category-link" style={{
+                background: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+                color: '#fff',
+                borderRadius: '20px',
+                padding: '6px 16px',
+                fontWeight: '700',
+                boxShadow: '0 3px 10px rgba(255,107,107,0.35)',
+                animation: 'pulse-glow 2s ease-in-out infinite'
+              }}>
+                <i className="fas fa-magic"></i> Customize ✨
+              </Link>
             </div>
           </div>
         </div>

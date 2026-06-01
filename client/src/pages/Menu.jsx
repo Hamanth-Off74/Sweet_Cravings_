@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { desserts } from '../data/desserts';
+import axios from '../api/axios';
 import QuickView from '../components/QuickView';
 import OfferBanner from '../components/OfferBanner';
 import FestivalSpecials from '../components/FestivalSpecials';
@@ -15,16 +15,35 @@ function Menu() {
   const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredDesserts, setFilteredDesserts] = useState(desserts);
+  const [allDesserts, setAllDesserts] = useState([]);
+  const [filteredDesserts, setFilteredDesserts] = useState([]);
+  const [loadingDesserts, setLoadingDesserts] = useState(true);
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [showQuickView, setShowQuickView] = useState(false);
 
+  // Fetch desserts from API on mount
+  useEffect(() => {
+    const fetchDesserts = async () => {
+      try {
+        const response = await axios.get('/api/desserts');
+        setAllDesserts(response.data);
+        setFilteredDesserts(response.data);
+      } catch (error) {
+        console.error('Error fetching desserts:', error);
+      } finally {
+        setLoadingDesserts(false);
+      }
+    };
+    fetchDesserts();
+  }, []);
+
   // Handle URL query params for search and category
   useEffect(() => {
+    if (allDesserts.length === 0) return;
     const categoryParam = searchParams.get('category');
     const searchParam = searchParams.get('search');
 
-    let filtered = desserts;
+    let filtered = allDesserts;
 
     // Apply category filter from URL
     if (categoryParam && categoryParam !== 'all') {
@@ -48,11 +67,11 @@ function Menu() {
     }
 
     setFilteredDesserts(filtered);
-  }, [searchParams]);
+  }, [searchParams, allDesserts]);
 
   const handleCategoryFilter = (category) => {
     setSelectedCategory(category);
-    let filtered = desserts;
+    let filtered = allDesserts;
 
     if (category !== 'all') {
       filtered = filtered.filter(d => d.category === category);
@@ -74,7 +93,7 @@ function Menu() {
     const query = e.target.value;
     setSearchQuery(query);
 
-    let filtered = desserts;
+    let filtered = allDesserts;
 
     // Apply category filter
     if (selectedCategory !== 'all') {
@@ -145,7 +164,12 @@ function Menu() {
             </div>
           </div>
 
-          {filteredDesserts.length === 0 ? (
+          {loadingDesserts ? (
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: '#888' }}>
+              <i className="fas fa-spinner fa-spin" style={{ fontSize: '36px', color: '#ff6b6b' }}></i>
+              <p style={{ marginTop: '15px' }}>Loading desserts...</p>
+            </div>
+          ) : filteredDesserts.length === 0 ? (
             <div className="no-results">
               <i className="fas fa-search"></i>
               <h3>No desserts found</h3>
@@ -153,7 +177,7 @@ function Menu() {
               <button className="btn btn-primary" onClick={() => {
                 setSelectedCategory('all');
                 setSearchQuery('');
-                setFilteredDesserts(desserts);
+                setFilteredDesserts(allDesserts);
               }}>
                 Clear Filters
               </button>

@@ -94,7 +94,14 @@ function Checkout() {
         
         if (response.data.success) {
           clearCart();
-          navigate('/confirmation');
+          navigate('/confirmation', {
+            state: {
+              orderData: {
+                ...orderData,
+                orderId: response.data.orderId
+              }
+            }
+          });
         } else {
           alert('Failed to place order: ' + response.data.error);
         }
@@ -122,7 +129,7 @@ function Checkout() {
         order_id: response.data.order_id,
         handler: async function (paymentResponse) {
           try {
-            await axios.post('/api/verify-payment', {
+            const verifyRes = await axios.post('/api/verify-payment', {
               razorpay_order_id: paymentResponse.razorpay_order_id,
               razorpay_payment_id: paymentResponse.razorpay_payment_id,
               razorpay_signature: paymentResponse.razorpay_signature,
@@ -130,16 +137,23 @@ function Checkout() {
             });
 
             clearCart();
-            navigate('/confirmation');
+            navigate('/confirmation', {
+              state: {
+                orderData: {
+                  ...orderData,
+                  orderId: verifyRes.data.orderId
+                }
+              }
+            });
           } catch (error) {
             console.error('Payment verification error:', error);
             alert('Payment verification failed!');
           }
         },
         prefill: {
-          name: 'Guest User',
-          email: 'guest@sweetcravings.com',
-          contact: '1234567890'
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.phone
         },
         theme: {
           color: '#ff6161'

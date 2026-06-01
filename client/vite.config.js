@@ -9,7 +9,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: process.env.NODE_ENV === 'production' ? '/sweet_cravings/' : '/',
+  base: '/',
   plugins: [react()],
   server: {
     port: 3000,
@@ -18,10 +18,11 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true
       },
-      '/images': {
+      '/images/uploads': {
         target: 'http://localhost:5000',
         changeOrigin: true
       }
     }
   }
 })
+
