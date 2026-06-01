@@ -267,40 +267,149 @@
 
 @media (max-width: 768px) {
   .menu-modern .dessert-grid {
-    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
-    gap: clamp(12px, 1.5vw, 16px);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 8px;
+  }
+
+  .menu-modern .dessert-card {
+    border-radius: 12px;
+  }
+
+  .menu-modern .dessert-image {
+    height: 140px;
   }
 
   .menu-modern .dessert-info {
-    padding: 10px 14px 12px;
+    padding: 10px 8px 8px;
   }
 
   .menu-modern .dessert-name {
-    font-size: 1.15rem !important;
+    font-size: 0.95rem !important;
   }
 
   .menu-modern .dessert-description {
-    font-size: 0.78rem !important;
+    font-size: 0.75rem !important;
+    line-height: 1.2;
   }
 
   .menu-modern .current-price {
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
+  }
+
+  .menu-modern .card-actions {
+    padding: 6px 8px 8px;
+    gap: 6px;
   }
 
   .menu-modern .card-actions button {
-    font-size: 0.9rem !important;
-    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+    padding: 8px 8px !important;
   }
 }
 
 @media (max-width: 480px) {
   .menu-modern .dessert-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 0 4px;
+  }
+
+  .menu-modern .dessert-image {
+    height: 120px;
   }
 
   .menu-modern .dessert-card {
-    max-width: 100%;
+    border-radius: 10px;
+  }
+
+  .menu-modern .dessert-info {
+    padding: 8px 6px 6px;
+  }
+
+  .menu-modern .dessert-name {
+    font-size: 0.85rem !important;
+    min-height: 20px;
+    margin-bottom: 2px;
+  }
+
+  .menu-modern .dessert-description {
+    font-size: 0.7rem !important;
+    line-height: 1.2;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .menu-modern .rating-section {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+  }
+
+  .menu-modern .current-price {
+    font-size: 0.95rem !important;
+  }
+
+  .menu-modern .card-actions {
+    padding: 4px 6px 6px;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .menu-modern .card-actions button {
+    font-size: 0.7rem !important;
+    padding: 6px 6px !important;
+  }
+
+  .menu-modern .card-heart {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .menu-modern .discount-pill {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+
+  /* Mobile filter styles */
+  .advanced-filters {
+    margin-bottom: 15px;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    min-width: 100%;
+    width: 100%;
+  }
+
+  .filter-buttons {
+    gap: 6px;
+  }
+
+  .filter-btn {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    flex: 1 1 calc(50% - 3px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 360px) {
+  .menu-modern .dessert-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-btn {
+    padding: 6px 8px !important;
+    font-size: 11px !important;
+    flex: 0 1 auto;
   }
 }
 
