@@ -134,31 +134,7 @@ function Menu() {
         <div className="container">
           <h1 className="section-title">Our Dessert Collection</h1>
 
-          {/* Search Bar for Menu Page */}
-          <div className="advanced-filters">
-            <div className="filter-row">
-              <div className="filter-group" style={{ flex: 1 }}>
-                <label className="filter-label">Search</label>
-                <input
-                  type="text"
-                  placeholder="Search desserts by name..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  style={{
-                    width: '100%',
-                    padding: '10px 16px',
-                    border: '2px solid #e0e0e0',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontFamily: 'inherit',
-                    transition: 'border-color 0.3s ease'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#ff6161'}
-                  onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
-                />
-              </div>
-            </div>
-          </div>
+
 
           {searchQuery && (
             <div className="search-results-info">
@@ -169,25 +145,7 @@ function Menu() {
             </div>
           )}
 
-          {/* Advanced Filters */}
-          <div className="advanced-filters">
-            <div className="filter-row">
-              <div className="filter-group">
-                <label className="filter-label">Category</label>
-                <div className="filter-buttons">
-                  {categories.map(category => (
-                    <button
-                      key={category}
-                      className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
-                      onClick={() => handleCategoryFilter(category)}
-                    >
-                      {category === 'all' ? 'All Items' : category}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+
 
           {loadingDesserts ? (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: '#888' }}>

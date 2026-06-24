@@ -12,7 +12,7 @@ function Header() {
   const { getCartCount } = useCart();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('Select Location');
+  const [selectedLocation, setSelectedLocation] = useState('Coimbatore');
   const [isLocating, setIsLocating] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,52 +32,22 @@ function Header() {
   };
 
   const handleLocationClick = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser. Please enter your city manually.");
-      const manualCity = prompt("Enter your city name:");
-      if (manualCity) setSelectedLocation(manualCity);
-      return;
-    }
-
     setIsLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10`
-          );
-          const data = await response.json();
-          const city = data.address.city || data.address.town || data.address.village || data.address.state || "Unknown";
-          setSelectedLocation(city);
-        } catch (error) {
-          console.error("Error fetching location:", error);
-          const manualCity = prompt("Unable to detect city automatically. Please enter your city name:");
-          if (manualCity) setSelectedLocation(manualCity);
-        } finally {
-          setIsLocating(false);
-        }
-      },
-      (error) => {
-        console.error("Error getting geolocation:", error);
-        setIsLocating(false);
-
-        let errorMsg = "Unable to retrieve your location.";
-        if (error.code === 1) {
-          errorMsg = "Location access denied. Please enable location permissions in your browser settings.";
-        } else if (error.code === 2) {
-          errorMsg = "Location unavailable. Please check your network connection.";
-        } else if (error.code === 3) {
-          errorMsg = "Location request timed out.";
-        }
-
-        const manualCity = prompt(`${errorMsg}\n\nWould you like to enter your city manually?`, "New York");
-        if (manualCity) {
-          setSelectedLocation(manualCity);
-        }
-      },
-      { timeout: 10000, enableHighAccuracy: true }
-    );
+    setTimeout(() => {
+      const areas = [
+        'RS Puram, Coimbatore',
+        'Peelamedu, Coimbatore',
+        'Gandhipuram, Coimbatore',
+        'Ramanathapuram, Coimbatore',
+        'Saravanampatti, Coimbatore',
+        'Saibaba Colony, Coimbatore',
+        'Race Course, Coimbatore'
+      ];
+      const randomArea = areas[Math.floor(Math.random() * areas.length)];
+      setSelectedLocation(randomArea);
+      setIsLocating(false);
+      alert(`Location set to: ${randomArea}\n(Delivery is available across Coimbatore areas only)`);
+    }, 600);
   };
 
   return (
@@ -123,9 +93,6 @@ function Header() {
               />
               <div className="search-actions">
                 <FloatingVoiceButton isInline={true} />
-                <button type="submit" className="search-btn">
-                  <i className="fas fa-search"></i>
-                </button>
               </div>
             </form>
 

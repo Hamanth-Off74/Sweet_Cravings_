@@ -14,8 +14,8 @@ function Checkout() {
     email: '',
     phone: '',
     street: '',
-    city: '',
-    zipCode: '',
+    city: 'Coimbatore',
+    zipCode: '641002',
     instructions: '',
     paymentMethod: 'razorpay'
   });
@@ -261,7 +261,8 @@ function Checkout() {
                   value={formData.city}
                   onChange={handleInputChange}
                   required
-                  style={{width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px'}}
+                  readOnly
+                  style={{width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px', background: '#f5f5f5', cursor: 'not-allowed'}}
                 />
               </div>
               <div>

@@ -829,8 +829,8 @@ p, li, span, label { font-family: var(--font-sans); }
 }
 
 .welcome-icon { color: var(--brand-accent) !important; font-size: 60px !important; }
-.welcome-brand { font-family: var(--font-serif) !important; font-size: 44px !important; letter-spacing: 2px !important; }
-.welcome-title { letter-spacing: 6px !important; font-family: var(--font-sans) !important; font-weight: 300 !important; font-size: 13px !important; }
+.welcome-brand { font-family: var(--font-serif) !important; font-size: 44px !important; letter-spacing: 2px !important; color: #ffffff !important; }
+.welcome-title { letter-spacing: 6px !important; font-family: var(--font-sans) !important; font-weight: 300 !important; font-size: 13px !important; color: rgba(255,255,255,0.9) !important; }
 .welcome-tagline { font-family: var(--font-sans) !important; font-size: 16px !important; color: rgba(255,255,255,0.65) !important; }
 .loader-bar { background: var(--brand-primary) !important; }
 

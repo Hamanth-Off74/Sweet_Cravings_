@@ -5,6 +5,7 @@ import { DarkModeProvider } from './context/DarkModeContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import FloatingVoiceButton from './components/FloatingVoiceButton';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
@@ -32,6 +33,7 @@ function Layout({ children }) {
     <>
       {!isAdminRoute && <Header />}
       <main>{children}</main>
+      {!isAdminRoute && <FloatingVoiceButton />}
       {!isAdminRoute && <Footer />}
     </>
   );
