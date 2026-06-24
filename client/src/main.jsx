@@ -5,11 +5,9 @@ import App from './App.jsx'
 import './index.css'
 
 // Import Clerk publishable key from environment variables
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+// Falls back to a default test key if not set in Vercel settings to prevent a blank screen
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_cHJpbWFyeS1jYXR0bGUtNy5jbGVyay5hY2NvdW50cy5kZXYk';
 
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Publishable Key. Please add VITE_CLERK_PUBLISHABLE_KEY to your .env.local file')
-}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
