@@ -3,31 +3,76 @@
 
 <head>
   <meta charset="UTF-8" />
+  
+  <!-- Viewport & Mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  
+  <!-- SEO Meta Tags -->
+  <title>SweetCravings - Premium Desserts Delivered Fresh Online</title>
+  <meta name="description" content="Order premium handcrafted desserts online. Fresh cakes, cookies, pies, and more delivered to your door. Same-day delivery available. Free delivery on orders above ₹500." />
+  <meta name="keywords" content="desserts, cakes, cookies, pies, brownies, online dessert delivery, premium bakery, handcrafted cakes" />
+  <meta name="author" content="SweetCravings" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Open Graph Tags (Social Media) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SweetCravings" />
+  <meta property="og:title" content="SweetCravings - Premium Desserts Delivered Fresh" />
+  <meta property="og:description" content="Handcrafted desserts delivered to your door. Order premium cakes, cookies, pies, and more today!" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1200&h=630&fit=crop" />
+  <meta property="og:url" content="https://sweet-cravings-frontendapp.vercel.app/" />
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="SweetCravings - Premium Desserts" />
+  <meta name="twitter:description" content="Fresh handcrafted desserts delivered to your door" />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1200&h=630&fit=crop" />
+  
+  <!-- Favicon & App Icons -->
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🍰</text></svg>" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><text y='135' font-size='135'>🍰</text></svg>" />
+  
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#c96b63" />
+  
+  <!-- Service Worker Management -->
   <script>
-    // Clear out any old "MediTrack" or previous project's local caches from localhost:3000
+    // Clear out any old caches from previous deployments
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(function (registrations) {
         for (let registration of registrations) {
           registration.unregister();
-          console.log("Deleted old project cache!");
-          // Force reload to show the newest Sweet Cravings immediately
-          window.location.reload(true);
         }
-      });
+      }).catch(err => console.log('Service Worker cleanup:', err));
     }
   </script>
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>SweetCravings - Premium Desserts Online</title>
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="/css/style.css?v=2.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  
+  <!-- Razorpay Checkout -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <script type="module" crossorigin src="/assets/index-BYQNJj7V.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CnkFGG6m.css">
+  
+  <!-- Preconnect to External Resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <script type="module" crossorigin src="/assets/index-Dke5eL0J.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Dqn9I6sO.css">
 </head>
 
 <body>
+  <noscript>
+    <div style="padding: 20px; text-align: center; font-family: sans-serif;">
+      <h1>JavaScript Required</h1>
+      <p>SweetCravings requires JavaScript to be enabled. Please enable it in your browser settings.</p>
+    </div>
+  </noscript>
+  
   <div id="root"></div>
 </body>
+
+</html>
 
 </html>
