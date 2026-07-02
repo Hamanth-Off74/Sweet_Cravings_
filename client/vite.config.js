@@ -12,14 +12,14 @@ export default defineConfig({
   base: '/',
   plugins: [react()],
   server: {
-    port: 3000,
+    port: 3005,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: '${import.meta.env.VITE_API_BASE_URL}',
         changeOrigin: true
       },
       '/images/uploads': {
-        target: 'http://localhost:5000',
+        target: '${import.meta.env.VITE_API_BASE_URL}',
         changeOrigin: true
       }
     }

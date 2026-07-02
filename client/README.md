@@ -65,7 +65,7 @@ Make sure MongoDB is running on your system.
 npm start
 ```
 
-The backend will run on **http://localhost:5000**
+The backend will run on **${import.meta.env.VITE_API_BASE_URL}**
 
 ### 5. Start React Frontend
 
@@ -86,7 +86,7 @@ server: {
   port: 3000,
   proxy: {
     '/api': {
-      target: 'http://localhost:5000',
+      target: '${import.meta.env.VITE_API_BASE_URL}',
       changeOrigin: true
     }
   }
