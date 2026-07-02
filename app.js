@@ -11,7 +11,8 @@ const app = express();
 const allowedOrigins = [
     process.env.CORS_ORIGIN,
     'http://localhost:3000',
-    'http://localhost:3001'
+    'http://localhost:3001',
+    'http://localhost:3005'
 ].filter(Boolean);
 
 // Enable CORS for React frontend
@@ -49,8 +50,17 @@ app.set('views', path.join(__dirname, 'views'));
 // Static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve React client build
+const clientDistPath = path.join(__dirname, 'client', 'dist');
+app.use(express.static(clientDistPath));
+
 // Routes
 app.use('/', require('./routes/index'));
+
+// Fallback to React for client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientDistPath, 'index.html'));
+});
 
 const port = process.env.PORT || 5000;
 

@@ -37,13 +37,13 @@
 **Create/Update `client/.env.local`:**
 ```bash
 # Copy from .env.example
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=${import.meta.env.VITE_API_BASE_URL}
 VITE_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
 ```
 
 **For Development (Local):**
 ```bash
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=${import.meta.env.VITE_API_BASE_URL}
 ```
 
 **For Production (Vercel):**

@@ -341,8 +341,8 @@ async function seedOrders() {
         console.log(`\n💰 Total Revenue: ₹${sampleOrders.reduce((sum, o) => sum + o.total, 0).toFixed(2)}`);
         
         console.log('\n🌐 View orders at:');
-        console.log('   - Admin Dashboard: http://localhost:5000/admin');
-        console.log('   - Orders Page: http://localhost:5000/orders');
+        console.log('   - Admin Dashboard: ${import.meta.env.VITE_API_BASE_URL}/admin');
+        console.log('   - Orders Page: ${import.meta.env.VITE_API_BASE_URL}/orders');
         
         process.exit(0);
     } catch (error) {
