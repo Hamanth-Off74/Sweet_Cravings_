@@ -1,21 +1,14 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/assets/(.*)",
-      "headers": { "cache-control": "public, max-age=31536000, immutable" },
-      "continue": true
+      "source": "/api/(.*)",
+      "destination": "https://sweet-cravings.onrender.com/api/$1"
     },
     {
-      "src": "/images/(.*)",
-      "headers": { "cache-control": "public, max-age=86400" },
-      "continue": true
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
+      "source": "/images/(.*)",
+      "destination": "https://sweet-cravings.onrender.com/images/$1"
     }
   ]
 }
