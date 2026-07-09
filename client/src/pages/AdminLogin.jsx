@@ -145,10 +145,7 @@ function AdminLogin() {
                 </div>
             </div>
 
-            {/* Demo Credentials Hint */}
-            <div className="admin-demo-hint">
-                <p><strong>Demo Credentials:</strong> admin / sweetcravings123</p>
-            </div>
+
         </div>
     );
 }
