@@ -137,6 +137,7 @@ function Checkout() {
               orderData: orderData
             });
 
+            alert('Payment Successful!');
             clearCart();
             navigate('/confirmation', {
               state: {
