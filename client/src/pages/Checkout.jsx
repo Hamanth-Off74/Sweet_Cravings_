@@ -26,6 +26,9 @@ function Checkout() {
   const [promoError, setPromoError] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
 
+  const [customerUpiId, setCustomerUpiId] = useState('');
+  const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+
   const subtotal = getCartTotal();
   const deliveryFee = subtotal >= 500 ? 0 : 50;
   const tax = subtotal * 0.05;
@@ -344,32 +347,50 @@ function Checkout() {
                     />
                     <p style={{fontSize: '14px', color: '#555', marginTop: '15px', marginBottom: '0'}}>UPI ID: hamanthguru2005@okicici</p>
                 </div>
-                <p style={{fontSize: '13px', color: '#666', marginBottom: '15px'}}>Scan to pay with any UPI app</p>
-                <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
+                
+                <div style={{maxWidth: '300px', margin: '0 auto 15px auto', textAlign: 'left'}}>
+                  <label style={{display: 'block', marginBottom: '5px', fontSize: '14px', color: '#555', fontWeight: '500'}}>Enter your UPI ID to verify payment:</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. yourname@upi"
+                    value={customerUpiId}
+                    onChange={(e) => setCustomerUpiId(e.target.value)}
+                    style={{width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '6px', fontSize: '14px', marginBottom: '15px'}}
+                  />
                   <button 
                     type="button" 
                     onClick={async () => {
-                      try {
-                        const orderData = {
-                          customer: { firstName: formData.firstName, lastName: formData.lastName, email: formData.email, phone: formData.phone },
-                          address: { street: formData.street, city: formData.city, zipCode: formData.zipCode, instructions: formData.instructions },
-                          items: cart, subtotal, deliveryFee, tax, total, paymentMethod: 'upi_qr'
-                        };
-                        const response = await axios.post('/api/order', orderData);
-                        if (response.data.success) {
-                          alert('Mock Payment Successful!');
-                          clearCart();
-                          navigate('/confirmation', { state: { orderData: { ...orderData, orderId: response.data.orderId } } });
-                        } else {
-                          alert('Failed to place order.');
-                        }
-                      } catch(e) {
-                        alert('Error processing mock payment.');
+                      if (!customerUpiId.trim()) {
+                        alert("Please enter your UPI ID to verify the payment.");
+                        return;
                       }
+                      
+                      setShowPaymentSuccess(true);
+                      
+                      setTimeout(async () => {
+                        try {
+                          const orderData = {
+                            customer: { firstName: formData.firstName, lastName: formData.lastName, email: formData.email, phone: formData.phone },
+                            address: { street: formData.street, city: formData.city, zipCode: formData.zipCode, instructions: formData.instructions },
+                            items: cart, subtotal, deliveryFee, tax, total, paymentMethod: 'upi_qr'
+                          };
+                          const response = await axios.post('/api/order', orderData);
+                          if (response.data.success) {
+                            clearCart();
+                            navigate('/confirmation', { state: { orderData: { ...orderData, orderId: response.data.orderId } } });
+                          } else {
+                            alert('Failed to place order.');
+                            setShowPaymentSuccess(false);
+                          }
+                        } catch(e) {
+                          alert('Error processing mock payment.');
+                          setShowPaymentSuccess(false);
+                        }
+                      }, 2500); // Wait 2.5s to show the popup
                     }}
-                    style={{padding: '10px 20px', background: '#4caf50', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold'}}
+                    style={{width: '100%', padding: '12px', background: '#4caf50', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', fontSize: '15px'}}
                   >
-                    <i className="fas fa-check-circle"></i> Simulate Payment Success
+                    <i className="fas fa-check-circle"></i> Verify Payment
                   </button>
                 </div>
               </div>
@@ -520,6 +541,43 @@ function Checkout() {
           )}
         </form>
       </div>
+
+      {/* Payment Success Popup Modal */}
+      {showPaymentSuccess && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+          background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', 
+          justifyContent: 'center', zIndex: 9999, animation: 'fadeIn 0.3s'
+        }}>
+          <div style={{
+            background: 'white', padding: '40px', borderRadius: '20px', 
+            textAlign: 'center', maxWidth: '400px', width: '90%', 
+            boxShadow: '0 10px 30px rgba(0,0,0,0.2)', animation: 'slideUp 0.4s'
+          }}>
+            <div style={{
+              width: '80px', height: '80px', background: '#4caf50', color: 'white', 
+              borderRadius: '50%', display: 'flex', alignItems: 'center', 
+              justifyContent: 'center', fontSize: '40px', margin: '0 auto 20px auto'
+            }}>
+              <i className="fas fa-check"></i>
+            </div>
+            <h2 style={{margin: '0 0 10px 0', color: '#333'}}>Payment Successful!</h2>
+            <p style={{color: '#666', margin: '0 0 20px 0'}}>
+              Received ₹{total.toFixed(2)} from {customerUpiId}
+            </p>
+            <div style={{fontSize: '24px', color: '#4caf50'}}>
+              <i className="fas fa-spinner fa-spin"></i>
+            </div>
+            <p style={{fontSize: '13px', color: '#999', marginTop: '15px'}}>Processing your order...</p>
+          </div>
+          <style>
+            {`
+              @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+              @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            `}
+          </style>
+        </div>
+      )}
     </div>
   );
 }
