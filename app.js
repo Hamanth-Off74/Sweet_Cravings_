@@ -58,7 +58,7 @@ app.use(express.static(clientDistPath));
 app.use('/', require('./routes/index'));
 
 // Fallback to React for client-side routing
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
