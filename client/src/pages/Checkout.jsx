@@ -18,7 +18,7 @@ function Checkout() {
     city: 'Coimbatore',
     zipCode: '641002',
     instructions: '',
-    paymentMethod: 'razorpay'
+    paymentMethod: 'upi_qr'
   });
 
   const [promoCode, setPromoCode] = useState('');
@@ -304,21 +304,11 @@ function Checkout() {
                 <input 
                   type="radio" 
                   name="paymentMethod" 
-                  value="razorpay" 
-                  checked={formData.paymentMethod === 'razorpay'}
-                  onChange={handleInputChange}
-                />
-                <span>Pay with Razorpay</span>
-              </label>
-              <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
-                <input 
-                  type="radio" 
-                  name="paymentMethod" 
                   value="upi_qr" 
                   checked={formData.paymentMethod === 'upi_qr'}
                   onChange={handleInputChange}
                 />
-                <span>UPI QR Code (Mock)</span>
+                <span>Online Payment</span>
               </label>
               <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
                 <input 
@@ -536,7 +526,7 @@ function Checkout() {
               onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
               onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
             >
-              <i className="fas fa-lock"></i> Proceed to Payment
+              <i className="fas fa-lock"></i> {formData.paymentMethod === 'cod' ? 'Place Order (Cash on Delivery)' : 'Proceed to Payment'}
             </button>
           )}
         </form>
