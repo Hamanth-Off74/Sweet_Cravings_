@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import axios from '../api/axios';
 import { validatePromoCode } from '../utils/promoCodes';
+import qrImage from '../assets/qr.jpeg';
 
 function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();
@@ -337,7 +338,7 @@ function Checkout() {
                         <span style={{fontSize: '18px', fontWeight: '500', color: '#444'}}>Hamanth</span>
                     </div>
                     <img 
-                      src="/qr.jpeg" 
+                      src={qrImage} 
                       alt="Hamanth UPI QR" 
                       style={{width: '200px', height: '200px', objectFit: 'contain', background: 'white', padding: '10px', borderRadius: '12px'}} 
                     />
