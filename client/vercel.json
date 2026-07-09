@@ -7,6 +7,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://sweet-cravings-1.onrender.com/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
