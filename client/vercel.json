@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/images/(.*)",
+      "destination": "https://sweet-cravings-1.onrender.com/images/$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://sweet-cravings-1.onrender.com/api/$1"
+    }
+  ]
+}
