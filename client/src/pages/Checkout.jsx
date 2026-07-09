@@ -295,7 +295,7 @@ function Checkout() {
             <h3 style={{margin: '0 0 20px 0', fontSize: '18px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px'}}>
               <i className="fas fa-credit-card"></i> Payment Method
             </h3>
-            <div style={{display: 'flex', gap: '15px'}}>
+            <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap'}}>
               <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
                 <input 
                   type="radio" 
@@ -304,7 +304,17 @@ function Checkout() {
                   checked={formData.paymentMethod === 'razorpay'}
                   onChange={handleInputChange}
                 />
-                <span>Pay with Razorpay (Cards/UPI/Wallets)</span>
+                <span>Pay with Razorpay</span>
+              </label>
+              <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
+                <input 
+                  type="radio" 
+                  name="paymentMethod" 
+                  value="upi_qr" 
+                  checked={formData.paymentMethod === 'upi_qr'}
+                  onChange={handleInputChange}
+                />
+                <span>UPI QR Code (Mock)</span>
               </label>
               <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
                 <input 
@@ -317,9 +327,55 @@ function Checkout() {
                 <span>Cash on Delivery</span>
               </label>
             </div>
+            
+            {formData.paymentMethod === 'upi_qr' && (
+              <div style={{marginTop: '20px', padding: '20px', background: '#fff5f5', border: '1px dashed #ff6161', borderRadius: '8px', textAlign: 'center'}}>
+                <h4 style={{marginTop: 0}}>Scan QR to Pay ₹{total.toFixed(2)}</h4>
+                <div style={{width: '250px', margin: '15px auto', background: '#f4f6f9', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', borderRadius: '16px', overflow: 'hidden', padding: '20px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}}>
+                    <div style={{display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px'}}>
+                        <div style={{width: '32px', height: '32px', borderRadius: '50%', background: '#ff6161', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold'}}>H</div>
+                        <span style={{fontSize: '18px', fontWeight: '500', color: '#444'}}>Hamanth</span>
+                    </div>
+                    <img 
+                      src="/qr.jpeg" 
+                      alt="Hamanth UPI QR" 
+                      style={{width: '200px', height: '200px', objectFit: 'contain', background: 'white', padding: '10px', borderRadius: '12px'}} 
+                    />
+                    <p style={{fontSize: '14px', color: '#555', marginTop: '15px', marginBottom: '0'}}>UPI ID: hamanthguru2005@okicici</p>
+                </div>
+                <p style={{fontSize: '13px', color: '#666', marginBottom: '15px'}}>Scan to pay with any UPI app</p>
+                <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
+                  <button 
+                    type="button" 
+                    onClick={async () => {
+                      try {
+                        const orderData = {
+                          customer: { firstName: formData.firstName, lastName: formData.lastName, email: formData.email, phone: formData.phone },
+                          address: { street: formData.street, city: formData.city, zipCode: formData.zipCode, instructions: formData.instructions },
+                          items: cart, subtotal, deliveryFee, tax, total, paymentMethod: 'upi_qr'
+                        };
+                        const response = await axios.post('/api/order', orderData);
+                        if (response.data.success) {
+                          alert('Mock Payment Successful!');
+                          clearCart();
+                          navigate('/confirmation', { state: { orderData: { ...orderData, orderId: response.data.orderId } } });
+                        } else {
+                          alert('Failed to place order.');
+                        }
+                      } catch(e) {
+                        alert('Error processing mock payment.');
+                      }
+                    }}
+                    style={{padding: '10px 20px', background: '#4caf50', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold'}}
+                  >
+                    <i className="fas fa-check-circle"></i> Simulate Payment Success
+                  </button>
+                </div>
+              </div>
+            )}
+            
             <p style={{margin: '15px 0 0 0', fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center', gap: '5px'}}>
-              <i className="fas fa-lock"></i> Secure payment powered by Razorpay<br/>
-              Supports Credit/Debit Cards, UPI, Netbanking, Wallets & more
+              <i className="fas fa-lock"></i> Secure checkout process
             </p>
           </div>
 
@@ -439,26 +495,28 @@ function Checkout() {
             </div>
           </div>
 
-          <button 
-            type="submit"
-            style={{
-              width: '100%',
-              padding: '16px',
-              fontSize: '18px',
-              fontWeight: '600',
-              background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'transform 0.2s',
-              boxShadow: '0 4px 12px rgba(255, 97, 97, 0.3)'
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <i className="fas fa-lock"></i> Proceed to Payment
-          </button>
+          {formData.paymentMethod !== 'upi_qr' && (
+            <button 
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                fontWeight: '600',
+                background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s',
+                boxShadow: '0 4px 12px rgba(255, 97, 97, 0.3)'
+              }}
+              onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+              onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+            >
+              <i className="fas fa-lock"></i> Proceed to Payment
+            </button>
+          )}
         </form>
       </div>
     </div>
