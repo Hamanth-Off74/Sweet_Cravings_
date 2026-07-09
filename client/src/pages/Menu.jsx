@@ -46,9 +46,9 @@ function Menu() {
     let filtered = allDesserts;
 
     // Apply category filter from URL
-    if (categoryParam && categoryParam !== 'all') {
+    if (categoryParam && categoryParam.toLowerCase() !== 'all') {
       setSelectedCategory(categoryParam);
-      filtered = filtered.filter(d => d.category === categoryParam);
+      filtered = filtered.filter(d => d.category && d.category.toLowerCase() === categoryParam.toLowerCase());
     } else {
       setSelectedCategory('all');
     }
@@ -73,8 +73,8 @@ function Menu() {
     setSelectedCategory(category);
     let filtered = allDesserts;
 
-    if (category !== 'all') {
-      filtered = filtered.filter(d => d.category === category);
+    if (category.toLowerCase() !== 'all') {
+      filtered = filtered.filter(d => d.category && d.category.toLowerCase() === category.toLowerCase());
     }
 
     // Also apply current search if any
@@ -134,7 +134,27 @@ function Menu() {
         <div className="container">
           <h1 className="section-title">Our Dessert Collection</h1>
 
-
+          <div className="category-filters" style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '30px' }}>
+            {categories.map(category => (
+              <button
+                key={category}
+                className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+                onClick={() => handleCategoryFilter(category)}
+                style={{
+                  padding: '8px 20px',
+                  borderRadius: '25px',
+                  border: 'none',
+                  background: selectedCategory === category ? '#ff6b6b' : '#f0f0f0',
+                  color: selectedCategory === category ? 'white' : '#333',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
+          </div>
 
           {searchQuery && (
             <div className="search-results-info">
