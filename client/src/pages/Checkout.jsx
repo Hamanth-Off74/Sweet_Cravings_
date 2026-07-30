@@ -8,7 +8,7 @@ import qrImage from '../assets/qr.jpeg';
 
 function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -38,6 +38,25 @@ function Checkout() {
       navigate('/cart');
     }
   }, [cart, navigate]);
+
+  useEffect(() => {
+    if (user?.unsafeMetadata?.address) {
+      const addressStr = user.unsafeMetadata.address;
+      let streetStr = addressStr;
+      let zipStr = '641002';
+      if (addressStr.includes(', Coimbatore - ')) {
+        const parts = addressStr.split(', Coimbatore - ');
+        streetStr = parts[0];
+        zipStr = parts[1];
+      }
+      setFormData(prev => ({
+        ...prev,
+        phone: user.unsafeMetadata.phone || prev.phone,
+        street: streetStr,
+        zipCode: zipStr
+      }));
+    }
+  }, [user]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -96,6 +115,18 @@ function Checkout() {
         const response = await axios.post('/api/order', orderData);
         
         if (response.data.success) {
+          try {
+            if (user && (!user.unsafeMetadata.address || !user.unsafeMetadata.phone)) {
+              await user.update({
+                unsafeMetadata: {
+                  ...user.unsafeMetadata,
+                  address: `${formData.street}, ${formData.city} - ${formData.zipCode}`,
+                  phone: formData.phone
+                }
+              });
+            }
+          } catch (err) { console.error('Failed to save profile details', err); }
+
           clearCart();
           navigate('/confirmation', {
             state: {
@@ -140,6 +171,19 @@ function Checkout() {
             });
 
             alert('Payment Successful!');
+            
+            try {
+              if (user && (!user.unsafeMetadata.address || !user.unsafeMetadata.phone)) {
+                await user.update({
+                  unsafeMetadata: {
+                    ...user.unsafeMetadata,
+                    address: `${formData.street}, ${formData.city} - ${formData.zipCode}`,
+                    phone: formData.phone
+                  }
+                });
+              }
+            } catch (err) { console.error('Failed to save profile details', err); }
+
             clearCart();
             navigate('/confirmation', {
               state: {

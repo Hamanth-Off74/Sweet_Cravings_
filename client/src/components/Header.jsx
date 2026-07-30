@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/clerk-react';
 import { useCart } from '../context/CartContext';
 import { useDarkMode } from '../context/DarkModeContext';
 import { useState } from 'react';
@@ -7,6 +7,36 @@ import BackgroundSlideshow from './BackgroundSlideshow';
 import { HeaderDock } from './ui/header-dock';
 import { IconShoppingCart, IconMoon, IconSun, IconReceipt } from '@tabler/icons-react';
 import FloatingVoiceButton from './FloatingVoiceButton';
+
+const DeliveryDetailsPage = () => {
+  const { user } = useUser();
+  if (!user) return null;
+  const address = user.unsafeMetadata?.address || 'No delivery address saved yet.';
+  const phone = user.unsafeMetadata?.phone || 'No phone number saved yet.';
+  
+  return (
+    <div style={{ padding: '24px', fontFamily: 'inherit' }}>
+      <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>Saved Delivery Details</h2>
+      <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', border: '1px solid #eee', marginBottom: '20px' }}>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Delivery Address</h4>
+        <p style={{ margin: 0, fontSize: '15px', color: '#444', lineHeight: '1.5' }}>
+          <i className="fas fa-map-marker-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
+          {address}
+        </p>
+      </div>
+      <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', border: '1px solid #eee' }}>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Number</h4>
+        <p style={{ margin: 0, fontSize: '15px', color: '#444' }}>
+          <i className="fas fa-phone-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
+          {phone}
+        </p>
+      </div>
+      <p style={{ marginTop: '20px', fontSize: '13px', color: '#888', fontStyle: 'italic' }}>
+        * Your details are automatically saved here when you place your first order.
+      </p>
+    </div>
+  );
+};
 
 function Header() {
   const { getCartCount } = useCart();
@@ -168,7 +198,15 @@ function Header() {
                         avatarBox: 'clerk-user-avatar'
                       }
                     }}
-                  />
+                  >
+                    <UserButton.UserProfilePage
+                      label="Delivery Details"
+                      url="delivery"
+                      labelIcon={<i className="fas fa-truck"></i>}
+                    >
+                      <DeliveryDetailsPage />
+                    </UserButton.UserProfilePage>
+                  </UserButton>
                 </div>
               </SignedIn>
             </div>
