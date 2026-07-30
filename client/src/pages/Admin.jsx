@@ -89,7 +89,14 @@ function Admin() {
       setStats(calculatedStats);
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setOrders(getFakeOrders());
+      const fakeData = getFakeOrders();
+      setOrders(fakeData);
+      setStats({
+        totalOrders: fakeData.length,
+        totalRevenue: fakeData.reduce((sum, order) => sum + order.total, 0),
+        pendingOrders: fakeData.filter(o => o.orderStatus === 'pending').length,
+        completedOrders: fakeData.filter(o => o.orderStatus === 'delivered').length
+      });
     } finally {
       setLoading(false);
       setRefreshing(false);
