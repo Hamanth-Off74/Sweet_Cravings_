@@ -228,13 +228,10 @@ function Home() {
                     <button
                       className="add-to-cart-btn"
                       onClick={() => handleAddToCart(dessert)}
+                      style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
                     >
                       <i className="fas fa-shopping-cart"></i>
-                      Add
-                    </button>
-                    <button className="review-btn">
-                      <i className="fas fa-star"></i>
-                      Reviews
+                      Add to Cart
                     </button>
                   </div>
                 </div>
