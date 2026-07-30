@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from '../api/axios';
+import { useUser, SignInButton } from '@clerk/clerk-react';
 
 function Orders() {
+  const { isSignedIn, isLoaded } = useUser();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
@@ -71,8 +73,12 @@ function Orders() {
   ];
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (isLoaded && isSignedIn) {
+      fetchOrders();
+    } else if (isLoaded && !isSignedIn) {
+      setLoading(false);
+    }
+  }, [isLoaded, isSignedIn]);
 
   const fetchOrders = async () => {
     try {
@@ -133,11 +139,51 @@ function Orders() {
     ? orders 
     : orders.filter(order => (order.orderStatus || 'pending').toLowerCase() === filterStatus);
 
-  if (loading) {
+  if (!isLoaded || (loading && isSignedIn)) {
     return (
       <div className="container" style={{textAlign: 'center', padding: '60px 20px'}}>
         <i className="fas fa-spinner fa-spin" style={{fontSize: '40px', color: '#ff6161'}}></i>
         <p style={{marginTop: '20px', fontSize: '16px', color: '#666'}}>Loading orders...</p>
+      </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div className="cart-section" style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{textAlign: 'center', padding: '50px 30px', background: '#fff', borderRadius: '16px', boxShadow: '0 4px 30px rgba(0,0,0,0.08)', border: '1px solid #ffdbd6', maxWidth: '450px', width: '90%'}}>
+          <i className="fas fa-lock" style={{fontSize: '60px', color: '#ffdbd6', marginBottom: '25px'}}></i>
+          <h2 style={{color: '#4a2c2a', marginBottom: '15px', fontSize: '26px', fontWeight: '800'}}>Sign In Required</h2>
+          <p style={{color: '#888', marginBottom: '30px', fontSize: '15px', lineHeight: '1.6'}}>
+            Please sign in to your account to view your past orders, track deliveries, and manage your history.
+          </p>
+          <SignInButton mode="modal">
+            <button style={{
+              padding: '14px 35px',
+              background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '12px',
+              fontWeight: '700',
+              fontSize: '16px',
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(255,107,107,0.3)',
+              transition: 'all 0.3s',
+              width: '100%'
+            }}
+            onMouseOver={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 20px rgba(255,107,107,0.4)';
+            }}
+            onMouseOut={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 15px rgba(255,107,107,0.3)';
+            }}
+            >
+              Sign In to Continue
+            </button>
+          </SignInButton>
+        </div>
       </div>
     );
   }
