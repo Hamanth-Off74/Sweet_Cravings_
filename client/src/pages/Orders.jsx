@@ -214,7 +214,9 @@ function Orders() {
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
+                  flexWrap: 'wrap',
+                  gap: '12px',
                   marginBottom: '20px',
                   paddingBottom: '15px',
                   borderBottom: '2px solid #f5f5f5'
@@ -250,6 +252,7 @@ function Orders() {
                     fontSize: '13px',
                     fontWeight: '600',
                     textTransform: 'capitalize',
+                    whiteSpace: 'nowrap',
                     ...getStatusBadgeStyle(order.orderStatus)
                   }}>
                     Order {order.orderStatus}
@@ -305,6 +308,8 @@ function Orders() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '15px',
                   paddingTop: '15px',
                   borderTop: '2px solid #f5f5f5'
                 }}>
@@ -314,12 +319,13 @@ function Orders() {
                     color: '#333',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    whiteSpace: 'nowrap'
                   }}>
                     <i className="fas fa-money-bill-wave" style={{color: '#ff6161'}}></i>
                     Total: <span style={{color: '#ff6161'}}>₹{order.total.toFixed(2)}</span>
                   </div>
-                  <div style={{display: 'flex', gap: '10px'}}>
+                  <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
                     <button style={{
                       padding: '10px 20px',
                       border: 'none',
