@@ -205,10 +205,19 @@ function Orders() {
             {filteredOrders.map(order => (
               <div key={order.orderId} style={{
                 background: '#fff',
-                borderRadius: '12px',
+                borderRadius: '16px',
                 padding: '25px',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-                border: '1px solid #f0f0f0'
+                boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                border: '1px solid #ffdbd6',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 12px 30px rgba(255,107,107,0.15)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.05)';
               }}>
                 {/* Order Header */}
                 <div style={{
@@ -270,10 +279,11 @@ function Orders() {
                       borderBottom: index < order.items.length - 1 ? '1px solid #f5f5f5' : 'none'
                     }}>
                       <img src={item.imageURL || item.image} alt={item.name} style={{
-                        width: '60px',
-                        height: '60px',
+                        width: '70px',
+                        height: '70px',
                         objectFit: 'cover',
-                        borderRadius: '8px'
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.08)'
                       }} />
                       <div style={{flex: 1}}>
                         <h4 style={{
@@ -314,54 +324,61 @@ function Orders() {
                   borderTop: '2px solid #f5f5f5'
                 }}>
                   <div style={{
-                    fontSize: '20px',
-                    fontWeight: '700',
-                    color: '#333',
+                    fontSize: '22px',
+                    fontWeight: '800',
+                    color: '#4a2c2a',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
                     whiteSpace: 'nowrap'
                   }}>
-                    <i className="fas fa-money-bill-wave" style={{color: '#ff6161'}}></i>
-                    Total: <span style={{color: '#ff6161'}}>₹{order.total.toFixed(2)}</span>
+                    <i className="fas fa-receipt" style={{color: '#ee5a24'}}></i>
+                    Total: <span style={{background: '-webkit-linear-gradient(135deg, #ff6b6b, #ee5a24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>₹{order.total.toFixed(2)}</span>
                   </div>
                   <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
                     <button style={{
-                      padding: '10px 20px',
+                      padding: '10px 24px',
                       border: 'none',
-                      borderRadius: '8px',
-                      background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
+                      borderRadius: '12px',
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
                       color: '#fff',
                       cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '600',
-                      transition: 'transform 0.2s'
+                      fontSize: '15px',
+                      fontWeight: '700',
+                      boxShadow: '0 4px 15px rgba(255,107,107,0.3)',
+                      transition: 'all 0.3s'
                     }}
-                    onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-                    onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                    onMouseOver={(e) => {
+                      e.target.style.transform = 'translateY(-2px) scale(1.02)';
+                      e.target.style.boxShadow = '0 6px 20px rgba(255,107,107,0.4)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.target.style.transform = 'translateY(0) scale(1)';
+                      e.target.style.boxShadow = '0 4px 15px rgba(255,107,107,0.3)';
+                    }}
                     >
                       View Details
                     </button>
                     <button 
                       onClick={() => setTrackingOrder(order)}
                       style={{
-                        padding: '10px 20px',
-                        border: '2px solid #ff6161',
-                        borderRadius: '8px',
-                        background: '#fff',
-                        color: '#ff6161',
+                        padding: '10px 24px',
+                        border: '2px solid #ffdbd6',
+                        borderRadius: '12px',
+                        background: '#fff9f5',
+                        color: '#ee5a24',
                         cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        transition: 'all 0.2s'
+                        fontSize: '15px',
+                        fontWeight: '700',
+                        transition: 'all 0.3s'
                       }}
                       onMouseOver={(e) => {
-                        e.target.style.background = '#ff6161';
-                        e.target.style.color = '#fff';
+                        e.target.style.background = '#ffece8';
+                        e.target.style.borderColor = '#ff6b6b';
                       }}
                       onMouseOut={(e) => {
-                        e.target.style.background = '#fff';
-                        e.target.style.color = '#ff6161';
+                        e.target.style.background = '#fff9f5';
+                        e.target.style.borderColor = '#ffdbd6';
                       }}
                     >
                       Track Order
