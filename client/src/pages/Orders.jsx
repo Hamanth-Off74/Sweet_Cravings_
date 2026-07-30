@@ -225,24 +225,25 @@ function Orders() {
                   justifyContent: 'space-between',
                   alignItems: 'flex-start',
                   flexWrap: 'wrap',
-                  gap: '12px',
+                  gap: '15px',
                   marginBottom: '20px',
                   paddingBottom: '15px',
                   borderBottom: '2px solid #f5f5f5'
                 }}>
-                  <div>
+                  <div style={{ flex: '1 1 200px' }}>
                     <h3 style={{
                       margin: '0 0 5px 0',
                       fontSize: '18px',
                       color: '#ff6161',
-                      fontWeight: '600'
+                      fontWeight: '700',
+                      wordBreak: 'break-word'
                     }}>
                       Order #{order.orderId}
                     </h3>
                     <p style={{
                       margin: 0,
                       fontSize: '13px',
-                      color: '#999',
+                      color: '#888',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px'
@@ -285,21 +286,23 @@ function Orders() {
                         borderRadius: '12px',
                         boxShadow: '0 4px 10px rgba(0,0,0,0.08)'
                       }} />
-                      <div style={{flex: 1}}>
+                      <div style={{flex: 1, minWidth: '120px'}}>
                         <h4 style={{
                           margin: '0 0 4px 0',
                           fontSize: '15px',
                           color: '#333',
-                          fontWeight: '600'
+                          fontWeight: '600',
+                          lineHeight: '1.3'
                         }}>
                           {item.name}
                         </h4>
                         <p style={{
                           margin: 0,
                           fontSize: '13px',
-                          color: '#999'
+                          color: '#888',
+                          whiteSpace: 'nowrap'
                         }}>
-                          × Quantity: {item.quantity}
+                          × Qty: {item.quantity}
                         </p>
                       </div>
                       <div style={{
@@ -319,7 +322,7 @@ function Orders() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   flexWrap: 'wrap',
-                  gap: '15px',
+                  gap: '20px',
                   paddingTop: '15px',
                   borderTop: '2px solid #f5f5f5'
                 }}>
@@ -330,14 +333,16 @@ function Orders() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '8px',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    flex: '1 1 100%' // Force total to take full width on mobile if needed, or let flex handle it
                   }}>
                     <i className="fas fa-receipt" style={{color: '#ee5a24'}}></i>
                     Total: <span style={{background: '-webkit-linear-gradient(135deg, #ff6b6b, #ee5a24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>₹{order.total.toFixed(2)}</span>
                   </div>
-                  <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                  <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', width: '100%', justifyContent: 'flex-start'}}>
                     <button style={{
-                      padding: '10px 24px',
+                      flex: '1 1 140px',
+                      padding: '12px 24px',
                       border: 'none',
                       borderRadius: '12px',
                       background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
@@ -346,14 +351,15 @@ function Orders() {
                       fontSize: '15px',
                       fontWeight: '700',
                       boxShadow: '0 4px 15px rgba(255,107,107,0.3)',
-                      transition: 'all 0.3s'
+                      transition: 'all 0.3s',
+                      textAlign: 'center'
                     }}
                     onMouseOver={(e) => {
-                      e.target.style.transform = 'translateY(-2px) scale(1.02)';
+                      e.target.style.transform = 'translateY(-2px)';
                       e.target.style.boxShadow = '0 6px 20px rgba(255,107,107,0.4)';
                     }}
                     onMouseOut={(e) => {
-                      e.target.style.transform = 'translateY(0) scale(1)';
+                      e.target.style.transform = 'translateY(0)';
                       e.target.style.boxShadow = '0 4px 15px rgba(255,107,107,0.3)';
                     }}
                     >
@@ -362,7 +368,8 @@ function Orders() {
                     <button 
                       onClick={() => setTrackingOrder(order)}
                       style={{
-                        padding: '10px 24px',
+                        flex: '1 1 140px',
+                        padding: '12px 24px',
                         border: '2px solid #ffdbd6',
                         borderRadius: '12px',
                         background: '#fff9f5',
@@ -370,7 +377,8 @@ function Orders() {
                         cursor: 'pointer',
                         fontSize: '15px',
                         fontWeight: '700',
-                        transition: 'all 0.3s'
+                        transition: 'all 0.3s',
+                        textAlign: 'center'
                       }}
                       onMouseOver={(e) => {
                         e.target.style.background = '#ffece8';
