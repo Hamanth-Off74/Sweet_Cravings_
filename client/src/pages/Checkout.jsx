@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useUser, SignInButton } from '@clerk/clerk-react';
 import axios from '../api/axios';
 import { validatePromoCode } from '../utils/promoCodes';
 import qrImage from '../assets/qr.jpeg';
 
 function Checkout() {
   const { cart, getCartTotal, clearCart } = useCart();
+  const { isSignedIn } = useUser();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -441,26 +443,63 @@ function Checkout() {
             </div>
           </div>
 
-          <button 
-            type="submit"
-            style={{
-              width: '100%',
-              padding: '16px',
-              fontSize: '18px',
-              fontWeight: '600',
-              background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'transform 0.2s',
-              boxShadow: '0 4px 12px rgba(255, 97, 97, 0.3)'
-            }}
-            onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-            onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
-          >
-            <i className="fas fa-lock"></i> {formData.paymentMethod === 'cod' ? 'Place Order (Cash on Delivery)' : 'Proceed to Payment'}
-          </button>
+          {!isSignedIn ? (
+            <SignInButton mode="modal">
+              <button 
+                type="button"
+                style={{
+                  width: '100%',
+                  padding: '16px',
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(255,107,107,0.4)';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(255,107,107,0.3)';
+                }}
+              >
+                <i className="fas fa-lock"></i> Sign In to Place Order
+              </button>
+            </SignInButton>
+          ) : (
+            <button 
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                fontWeight: '700',
+                background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                transition: 'all 0.3s',
+                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)'
+              }}
+              onMouseOver={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 6px 20px rgba(255,107,107,0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 4px 15px rgba(255,107,107,0.3)';
+              }}
+            >
+              <i className="fas fa-check-circle"></i> {formData.paymentMethod === 'cod' ? 'Place Order (Cash on Delivery)' : 'Proceed to Payment'}
+            </button>
+          )}
         </form>
       </div>
     </div>

@@ -8,6 +8,7 @@ function Orders() {
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('all');
   const [trackingOrder, setTrackingOrder] = useState(null);
+  const [viewingDetails, setViewingDetails] = useState(null);
 
   const getFakeOrders = () => [
     {
@@ -386,8 +387,10 @@ function Orders() {
                     Total: <span style={{background: '-webkit-linear-gradient(135deg, #ff6b6b, #ee5a24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>₹{order.total.toFixed(2)}</span>
                   </div>
                   <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap', width: '100%', justifyContent: 'flex-start'}}>
-                    <button style={{
-                      flex: '1 1 140px',
+                    <button 
+                      onClick={() => setViewingDetails(order)}
+                      style={{
+                        flex: '1 1 140px',
                       padding: '12px 24px',
                       border: 'none',
                       borderRadius: '12px',
@@ -638,7 +641,101 @@ function Orders() {
               </div>
             </div>
           </div>
+          </div>
         )}
+
+        {/* Invoice / Details Modal */}
+        {viewingDetails && (
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(5px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '20px'
+          }} onClick={() => setViewingDetails(null)}>
+            <div style={{
+              background: '#fff',
+              borderRadius: '16px',
+              padding: '30px',
+              maxWidth: '500px',
+              width: '100%',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+              position: 'relative',
+              maxHeight: '90vh',
+              overflowY: 'auto'
+            }} onClick={(e) => e.stopPropagation()}>
+              <button 
+                onClick={() => setViewingDetails(null)}
+                style={{
+                  position: 'absolute',
+                  top: '15px',
+                  right: '15px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#666',
+                  lineHeight: '1',
+                  padding: '5px'
+                }}
+              >
+                &times;
+              </button>
+
+              <div style={{ textAlign: 'center', marginBottom: '25px', borderBottom: '2px dashed #eee', paddingBottom: '20px' }}>
+                <i className="fas fa-file-invoice-dollar" style={{fontSize: '40px', color: '#ff6b6b', marginBottom: '10px'}}></i>
+                <h2 style={{color: '#333', margin: '0 0 5px 0', fontSize: '22px', fontWeight: '800'}}>Order Details</h2>
+                <p style={{color: '#888', margin: 0, fontSize: '14px'}}>#{viewingDetails.orderId}</p>
+              </div>
+
+              <div style={{ marginBottom: '20px' }}>
+                <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#888', textTransform: 'uppercase' }}>Items Ordered</h4>
+                {viewingDetails.items.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '15px' }}>
+                    <span style={{color: '#444'}}><b>{item.quantity}x</b> {item.name}</span>
+                    <span style={{fontWeight: '600', color: '#333'}}>₹{(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '12px', marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', color: '#666' }}>
+                  <span>Subtotal</span>
+                  <span>₹{((viewingDetails.total - 50) / 1.05).toFixed(2)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', color: '#666' }}>
+                  <span>Delivery Fee</span>
+                  <span>₹50.00</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px', color: '#666' }}>
+                  <span>Taxes & Fees</span>
+                  <span>₹{(viewingDetails.total - 50 - ((viewingDetails.total - 50) / 1.05)).toFixed(2)}</span>
+                </div>
+                <hr style={{ border: 'none', borderTop: '1px solid #ddd', margin: '12px 0' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: '800', color: '#4a2c2a' }}>
+                  <span>Total Paid</span>
+                  <span style={{color: '#ff6161'}}>₹{viewingDetails.total.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <div>
+                <h4 style={{ margin: '0 0 10px 0', fontSize: '14px', color: '#888', textTransform: 'uppercase' }}>Delivery Information</h4>
+                <p style={{ margin: 0, fontSize: '14px', color: '#444', lineHeight: '1.5' }}>
+                  <i className="fas fa-map-marker-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
+                  {viewingDetails.address}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
