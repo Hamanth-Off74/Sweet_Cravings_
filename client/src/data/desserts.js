@@ -9,7 +9,7 @@ export const desserts = [
         discount: 18,
         rating: 4.8,
         reviews: 312,
-        imageURL: '/images/cakes/chocolate-cake.jpg',
+        imageURL: '/images/cakes/triple-chocolate-cake-4.jpg',
         category: 'Cakes',
         customizable: true
     },

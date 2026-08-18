@@ -7,7 +7,7 @@ import '../styles/CustomizeStudio.css';
 const TYPES = [
   {
     id: 'Cake', label: 'Cake', basePrice: 280,
-    img: '/images/cakes/chocolate-cake.jpg',
+    img: '/images/cakes/triple-chocolate-cake-4.jpg',
     desc: 'Layered & frosted'
   },
   {
@@ -30,7 +30,7 @@ const TYPES = [
 // image per flavor & type
 const FLAVOR_IMAGES = {
   Chocolate:  {
-    Cake:    '/images/cakes/chocolate-cake.jpg',
+    Cake:    '/images/cakes/triple-chocolate-cake-4.jpg',
     Brownie: '/images/brownies/Chewy Fudgy-Brownies.jpg',
     Cookie:  '/images/cookies/double chocolate-cookies.jpg',
     Tart:    '/images/tarts/chocolate-tart.jpg',
@@ -121,7 +121,7 @@ function calcPrice(config) {
 
 function getPreviewImage(config) {
   return (FLAVOR_IMAGES[config.flavor] || FLAVOR_IMAGES['Chocolate'])[config.type]
-    || '/images/cakes/chocolate-cake.jpg';
+    || '/images/cakes/triple-chocolate-cake-4.jpg';
 }
 
 // ─── Live Preview ────────────────────────────────────────

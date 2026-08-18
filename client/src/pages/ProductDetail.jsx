@@ -24,7 +24,7 @@ function ProductDetail() {
     rating: 4.8,
     reviews: 156,
     description: 'Indulge in our decadent Chocolate Fudge Cake, made with premium Belgian chocolate and rich cocoa. Layers of moist chocolate sponge with velvety chocolate ganache frosting. Perfect for celebrations or treating yourself!',
-    imageURL: '/images/cakes/chocolate-cake.jpg',
+    imageURL: '/images/cakes/triple-chocolate-cake-4.jpg',
     category: 'cakes',
     stock: 8,
     features: [

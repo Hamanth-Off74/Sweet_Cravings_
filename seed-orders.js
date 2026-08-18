@@ -29,7 +29,7 @@ const sampleOrders = [
                 name: 'Chocolate Cake',
                 price: 180.00,
                 quantity: 2,
-                image: '/images/cakes/chocolate-cake.jpg'
+                image: '/images/cakes/triple-chocolate-cake-4.jpg'
             },
             {
                 id: '6',
@@ -188,7 +188,7 @@ const sampleOrders = [
                 name: 'Chocolate Cake',
                 price: 180.00,
                 quantity: 1,
-                image: '/images/cakes/chocolate-cake.jpg'
+                image: '/images/cakes/triple-chocolate-cake-4.jpg'
             }
         ],
         subtotal: 180.00,
