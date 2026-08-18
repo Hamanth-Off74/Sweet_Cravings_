@@ -10,33 +10,112 @@ import FloatingVoiceButton from './FloatingVoiceButton';
 
 const DeliveryDetailsPage = () => {
   const { user } = useUser();
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    address: user?.unsafeMetadata?.address || '',
+    phone: user?.unsafeMetadata?.phone || ''
+  });
+  const [isSaving, setIsSaving] = useState(false);
+
   if (!user) return null;
-  const address = user.unsafeMetadata?.address || 'No delivery address saved yet.';
-  const phone = user.unsafeMetadata?.phone || 'No phone number saved yet.';
+
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      await user.update({
+        unsafeMetadata: {
+          ...user.unsafeMetadata,
+          address: formData.address,
+          phone: formData.phone
+        }
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error('Failed to update profile:', err);
+      alert('Failed to save profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
   
   return (
     <div style={{ padding: '24px', fontFamily: 'inherit' }}>
-      <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '20px', color: '#333' }}>Saved Delivery Details</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#333', margin: 0 }}>Delivery Profile</h2>
+        {!isEditing && (
+          <button 
+            onClick={() => setIsEditing(true)}
+            style={{ padding: '6px 12px', background: '#f0f0f0', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+          >
+            Edit
+          </button>
+        )}
+      </div>
+
       <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', border: '1px solid #eee', marginBottom: '20px' }}>
         <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Delivery Address</h4>
-        <p style={{ margin: 0, fontSize: '15px', color: '#444', lineHeight: '1.5' }}>
-          <i className="fas fa-map-marker-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
-          {address}
-        </p>
+        {isEditing ? (
+          <textarea
+            value={formData.address}
+            onChange={(e) => setFormData({...formData, address: e.target.value})}
+            placeholder="Enter your full delivery address"
+            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', minHeight: '60px', fontFamily: 'inherit' }}
+          />
+        ) : (
+          <p style={{ margin: 0, fontSize: '15px', color: '#444', lineHeight: '1.5' }}>
+            <i className="fas fa-map-marker-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
+            {formData.address || 'No delivery address saved yet.'}
+          </p>
+        )}
       </div>
+
       <div style={{ background: '#f9f9f9', padding: '20px', borderRadius: '12px', border: '1px solid #eee' }}>
         <h4 style={{ margin: '0 0 8px 0', fontSize: '13px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Contact Number</h4>
-        <p style={{ margin: 0, fontSize: '15px', color: '#444' }}>
-          <i className="fas fa-phone-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
-          {phone}
-        </p>
+        {isEditing ? (
+          <input
+            type="text"
+            value={formData.phone}
+            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+            placeholder="Enter your phone number"
+            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', fontFamily: 'inherit' }}
+          />
+        ) : (
+          <p style={{ margin: 0, fontSize: '15px', color: '#444' }}>
+            <i className="fas fa-phone-alt" style={{color: '#ff6b6b', marginRight: '8px'}}></i>
+            {formData.phone || 'No phone number saved yet.'}
+          </p>
+        )}
       </div>
-      <p style={{ marginTop: '20px', fontSize: '13px', color: '#888', fontStyle: 'italic' }}>
-        * Your details are automatically saved here when you place your first order.
-      </p>
+
+      {isEditing ? (
+        <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            style={{ flex: 1, padding: '10px', background: '#ff6b6b', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </button>
+          <button 
+            onClick={() => {
+              setIsEditing(false);
+              setFormData({ address: user?.unsafeMetadata?.address || '', phone: user?.unsafeMetadata?.phone || '' });
+            }}
+            disabled={isSaving}
+            style={{ flex: 1, padding: '10px', background: '#ccc', color: '#333', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <p style={{ marginTop: '20px', fontSize: '13px', color: '#888', fontStyle: 'italic' }}>
+          * Your details will be automatically used to speed up your checkout.
+        </p>
+      )}
     </div>
   );
 };
+
 
 function Header() {
   const { getCartCount } = useCart();
