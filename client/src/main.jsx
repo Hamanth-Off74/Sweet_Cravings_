@@ -13,6 +13,20 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
+      localization={{
+        signIn: {
+          start: {
+            title: "Sign in to Sweet Cravings",
+            subtitle: "Welcome back! Please sign in to continue"
+          }
+        },
+        signUp: {
+          start: {
+            title: "Sign up for Sweet Cravings",
+            subtitle: "Create an account to start ordering your cravings"
+          }
+        }
+      }}
       appearance={{
         variables: {
           colorPrimary: '#ff6b6b',
