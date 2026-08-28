@@ -48,30 +48,12 @@ VITE_API_BASE_URL=${import.meta.env.VITE_API_BASE_URL}
 
 **For Production (Vercel):**
 ```bash
-VITE_API_BASE_URL=https://your-backend-url.railway.app
+VITE_API_BASE_URL=https://your-backend-url.onrender.com
 ```
 
 ### Step 2: Get Your Backend URL
 
-Your backend needs to be deployed to one of these FREE platforms:
-
-#### **OPTION A: Deploy to Railway (Recommended)**
-
-1. Go to https://railway.app
-2. Sign up with GitHub
-3. Create new project → GitHub → Connect repo
-4. Select your repo and branch
-5. Add environment variables:
-   ```
-   MONGODB_URI=your_mongodb_url
-   RAZORPAY_KEY_ID=your_key
-   RAZORPAY_KEY_SECRET=your_secret
-   ```
-6. Deploy
-7. Copy your Railway URL: `https://your-project.railway.app`
-8. Backend URL = `https://your-project.railway.app`
-
-#### **OPTION B: Deploy to Render.com**
+Deploy the backend to Render.com:
 
 1. Go to https://render.com
 2. Sign up
@@ -80,17 +62,9 @@ Your backend needs to be deployed to one of these FREE platforms:
 5. Runtime: Node
 6. Build Command: `npm install`
 7. Start Command: `npm start`
-8. Add env vars same as Railway
+8. Add the required environment variables
 9. Deploy
 10. Copy your Render URL: `https://your-project.onrender.com`
-
-#### **OPTION C: Deploy to Heroku (Paid, but simple)**
-
-1. Go to https://heroku.com
-2. Create app
-3. Connect GitHub
-4. Deploy
-5. Get your Heroku URL
 
 ---
 
@@ -103,7 +77,7 @@ Your backend needs to be deployed to one of these FREE platforms:
 3. Go to **Settings** → **Environment Variables**
 4. Add new variable:
    - **Name**: `VITE_API_BASE_URL`
-   - **Value**: `https://your-backend-url.railway.app` (or Render/Heroku URL)
+  - **Value**: `https://your-backend-url.onrender.com`
    - **Environments**: Select "Production" or "All"
 5. Click **Save**
 6. Go to **Deployments**
@@ -137,7 +111,7 @@ Your backend needs to be deployed to one of these FREE platforms:
 5. If no data, check API_BASE_URL is set correctly
 
 ❌ If API fails:
-1. Verify backend is running: https://your-backend-url.railway.app/api/desserts
+1. Verify backend is running: https://your-backend-url.onrender.com/api/desserts
 2. Check CORS is enabled in backend
 3. Verify VITE_API_BASE_URL env var in Vercel
 ```
@@ -316,7 +290,7 @@ git push origin main
 
 ### Problem: No Desserts Loading (API Errors)
 **Solution:**
-1. Check backend is running: Visit `https://your-backend-url.railway.app/api/desserts`
+1. Check backend is running: Visit `https://your-backend-url.onrender.com/api/desserts`
 2. If 404: Backend not deployed correctly
 3. If CORS error: Update backend CORS settings
 4. Check `VITE_API_BASE_URL` in Vercel is correct
@@ -389,7 +363,6 @@ git push origin main
 ## **SUPPORT LINKS**
 
 - Vercel Docs: https://vercel.com/docs
-- Railway Docs: https://docs.railway.app
 - React Router: https://reactrouter.com
 - Razorpay: https://razorpay.com/docs
 - Font Awesome: https://fontawesome.com
