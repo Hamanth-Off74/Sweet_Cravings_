@@ -85,31 +85,6 @@ npm install
 cd ..
 ```
 
-Create a backend `.env` file in the repository root:
-
-```dotenv
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/sweetcravings
-CORS_ORIGIN=http://localhost:5173
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-RAZORPAY_WEBHOOK_SECRET=your_razorpay_webhook_secret
-ASSEMBLYAI_KEY=your_assemblyai_api_key
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=change_this_password
-ADMIN_EMAIL=admin@example.com
-```
-
-Create `client/.env.local` for the Vite frontend:
-
-```dotenv
-VITE_API_BASE_URL=http://localhost:5000
-VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-```
-
-`VITE_API_BASE_URL` may be left empty when the React app is served by the same Express server in production. Never commit real secrets or `.env` files.
-
 ## Running Locally
 
 Run the backend in one terminal:
