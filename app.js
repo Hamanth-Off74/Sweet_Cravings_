@@ -15,9 +15,24 @@ const allowedOrigins = [
     'http://localhost:3005'
 ].filter(Boolean);
 
-// Enable CORS for React frontend
+// Enable CORS for React frontend with dynamic origin matching
 app.use(cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+        // Allow server-to-server or local REST client requests (no origin)
+        if (!origin) return callback(null, true);
+        
+        const isAllowed = allowedOrigins.includes(origin) || 
+                          origin.startsWith('http://localhost') || 
+                          origin.endsWith('.vercel.app') ||
+                          origin.includes('sweet-cravings');
+                          
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked for origin: ${origin}`);
+            callback(null, false); // Block origin but don't crash Express process
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
