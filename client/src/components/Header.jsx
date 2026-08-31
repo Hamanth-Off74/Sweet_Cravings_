@@ -175,101 +175,107 @@ function Header() {
           </div>
         </div>
 
-        <nav className="navbar">
-          <div className="container">
-            <div className="nav-brand">
-              <Link to="/" className="logo">
-                <i className="fas fa-birthday-cake"></i>
-                SweetCravings
+        <nav className="navbar" style={{ background: '#ff003c', padding: '8px 0', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+          <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+            
+            {/* Left: Brand Logo & Delivering To */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              <Link to="/" className="logo" style={{ color: '#fff', fontSize: '24px', fontWeight: 'bold', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'system-ui' }}>
+                <i className="fas fa-birthday-cake" style={{ color: '#fff' }}></i>
+                <span style={{ fontWeight: '800', letterSpacing: '-0.5px' }}>SweetCravings</span>
               </Link>
-              <div className="location-selector" onClick={handleLocationClick}>
-                <i className={`fas ${isLocating ? 'fa-spinner fa-spin' : 'fa-map-marker-alt'}`}></i>
-                <div className="location-info">
-                  <span className="location-label">Deliver to</span>
-                  <span className="location-address">{isLocating ? 'Locating...' : selectedLocation}</span>
-                </div>
-                <i className="fas fa-chevron-down"></i>
+
+              <div className="location-selector" onClick={handleLocationClick} style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#fff', cursor: 'pointer', fontSize: '13px', background: 'rgba(255,255,255,0.15)', padding: '6px 12px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.2)' }}>
+                <i className={`fas ${isLocating ? 'fa-spinner fa-spin' : 'fa-map-marker-alt'}`} style={{ color: '#fff', fontSize: '14px' }}></i>
+                <span style={{ fontWeight: '500' }}>Delivering To: <strong style={{ textDecoration: 'underline' }}>{isLocating ? 'Locating...' : selectedLocation.split(',')[0]}</strong></span>
+                <i className="fas fa-chevron-down" style={{ fontSize: '9px' }}></i>
               </div>
             </div>
 
-            <form className="search-bar" onSubmit={handleSearch}>
+            {/* Center: Search Bar */}
+            <form className="search-bar" onSubmit={handleSearch} style={{ flex: '1', maxWidth: '500px', position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <i className="fas fa-search" style={{ position: 'absolute', left: '16px', color: '#888', fontSize: '15px' }}></i>
               <input
                 type="text"
-                placeholder="Search for desserts, cakes..."
+                placeholder="Search For Cakes, Occasion, Flavour And More..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={handleKeyPress}
+                style={{
+                  width: '100%',
+                  padding: '12px 45px 12px 42px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontSize: '14px',
+                  outline: 'none',
+                  background: '#fff',
+                  color: '#333',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                }}
               />
-              <div className="search-actions">
+              <div style={{ position: 'absolute', right: '12px', display: 'flex', alignItems: 'center' }}>
                 <FloatingVoiceButton isInline={true} />
               </div>
             </form>
 
-            <div className="nav-actions">
-              <HeaderDock
-                items={[
-                  {
-                    title: isDarkMode ? 'Light Mode' : 'Dark Mode',
-                    icon: isDarkMode ? <IconSun className="w-full h-full" /> : <IconMoon className="w-full h-full" />,
-                    onClick: toggleDarkMode
-                  },
-                  {
-                    title: "Orders",
-                    icon: <IconReceipt className="w-full h-full" />,
-                    href: "/orders"
-                  },
-                  {
-                    title: "Cart",
-                    icon: <IconShoppingCart className="w-full h-full" />,
-                    href: "/cart",
-                    badge: getCartCount() > 0 ? getCartCount() : null
-                  }
-                ]}
-              />
+            {/* Right: Action Links */}
+            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              {/* Dark Mode toggle */}
+              <button 
+                onClick={toggleDarkMode}
+                style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', fontSize: '11px', gap: '4px', padding: 0 }}
+              >
+                <i className={`fas ${isDarkMode ? 'fa-sun' : 'fa-moon'}`} style={{ fontSize: '18px' }}></i>
+                <span style={{ fontWeight: '500' }}>Theme</span>
+              </button>
 
-              {/* Clerk Authentication */}
+              {/* Track Order */}
+              <Link to="/orders" style={{ textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', fontSize: '11px' }}>
+                <i className="fas fa-receipt" style={{ fontSize: '18px' }}></i>
+                <span style={{ fontWeight: '500' }}>Track Order</span>
+              </Link>
+
+              {/* Cart */}
+              <Link to="/cart" style={{ textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', fontSize: '11px', position: 'relative' }}>
+                <i className="fas fa-shopping-cart" style={{ fontSize: '18px' }}></i>
+                <span style={{ fontWeight: '500' }}>Cart</span>
+                {getCartCount() > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-6px',
+                    right: '-4px',
+                    background: '#fff',
+                    color: '#ff003c',
+                    borderRadius: '50%',
+                    padding: '2px 6px',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}>
+                    {getCartCount()}
+                  </span>
+                )}
+              </Link>
+
+              {/* Login / Profile */}
               <SignedOut>
-                <div id="guest-actions" className="auth-buttons">
-                  <SignInButton mode="modal">
-                    <button className="btn btn-nav">Login</button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <button className="btn btn-nav btn-outline">Sign Up</button>
-                  </SignUpButton>
-                </div>
+                <SignInButton mode="modal">
+                  <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', fontSize: '11px', padding: 0 }}>
+                    <i className="fas fa-user" style={{ fontSize: '18px' }}></i>
+                    <span style={{ fontWeight: '500' }}>Login/Signup</span>
+                  </button>
+                </SignInButton>
               </SignedOut>
 
               <SignedIn>
-                <div id="user-actions" className="user-profile" style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                  <Link to="/admin/login" style={{
-                    width: '40px',
-                    height: '40px',
-                    minWidth: '40px',
-                    minHeight: '40px',
-                    background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
-                    color: '#fff',
-                    textDecoration: 'none',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s',
-                    boxShadow: '0 2px 8px rgba(255, 97, 97, 0.3)',
-                    fontSize: '16px',
-                    flexShrink: '0'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 97, 97, 0.5)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 97, 97, 0.3)';
-                  }}
-                  title="Admin Panel"
-                  >
-                    <i className="fas fa-user-shield"></i>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  {/* Admin Panel */}
+                  <Link to="/admin/login" style={{ textDecoration: 'none', color: '#fff', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', fontSize: '11px' }}>
+                    <i className="fas fa-user-shield" style={{ fontSize: '18px' }}></i>
+                    <span style={{ fontWeight: '500' }}>Admin</span>
                   </Link>
+
+                  {/* Profile Button */}
                   <UserButton
                     afterSignOutUrl="/"
                     appearance={{
@@ -289,6 +295,7 @@ function Header() {
                 </div>
               </SignedIn>
             </div>
+
           </div>
         </nav>
 
