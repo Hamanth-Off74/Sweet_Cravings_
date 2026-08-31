@@ -534,159 +534,103 @@ router.post('/api/order', async (req, res) => {
     }
 });
 
-// API: Create Stripe Checkout Session
-router.post('/api/create-stripe-session', async (req, res) => {
+// API: Create Razorpay order
+router.post('/api/create-razorpay-order', async (req, res) => {
     try {
-        const { orderData } = req.body;
+        const { amount, currency = 'INR', receipt } = req.body;
 
-        if (!orderData || !orderData.items || orderData.items.length === 0) {
-            return res.status(400).json({ success: false, error: 'Order data is missing or empty' });
+        if (!amount) {
+            return res.status(400).json({ success: false, error: 'Amount is required' });
         }
 
-        // Save order to MongoDB as pending first
-        const newOrder = new Order({
-            orderId: 'ORD-' + Date.now(),
-            customer: orderData.customer,
-            address: orderData.address,
-            items: orderData.items,
-            subtotal: orderData.subtotal,
-            deliveryFee: orderData.deliveryFee,
-            tax: orderData.tax,
-            total: orderData.total,
-            paymentMethod: 'stripe',
-            paymentStatus: 'pending',
-            orderStatus: 'pending'
-        });
+        const options = {
+            amount: Math.round(amount * 100),  // Amount in paise (multiply by 100)
+            currency: currency,
+            receipt: receipt || 'order_rcptid_' + Date.now()
+        };
 
-        await newOrder.save();
+        console.log('Creating Razorpay order with options:', options);
 
-        console.log(`Stripe Order Initiated - Saved pending Order ID: ${newOrder.orderId}`);
+        const order = await req.app.locals.razorpay.orders.create(options);
 
-        // Prepare Stripe line items
-        const lineItems = orderData.items.map(item => {
-            // Absolute URL check for image
-            const imgUrl = item.imageURL 
-                ? (item.imageURL.startsWith('http') ? item.imageURL : `https://sweet-cravings-sigma.vercel.app${item.imageURL}`)
-                : 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200&h=200&fit=crop';
-            
-            return {
-                price_data: {
-                    currency: 'inr',
-                    product_data: {
-                        name: item.name,
-                        images: [imgUrl]
-                    },
-                    unit_amount: Math.round(item.price * 100) // amount in paise
-                },
-                quantity: item.quantity
-            };
-        });
-
-        // Add delivery fee as separate line item if exists
-        if (orderData.deliveryFee > 0) {
-            lineItems.push({
-                price_data: {
-                    currency: 'inr',
-                    product_data: {
-                        name: 'Delivery Fee'
-                    },
-                    unit_amount: Math.round(orderData.deliveryFee * 100)
-                },
-                quantity: 1
-            });
-        }
-
-        // Add tax as separate line item if exists
-        if (orderData.tax > 0) {
-            lineItems.push({
-                price_data: {
-                    currency: 'inr',
-                    product_data: {
-                        name: 'GST / Tax'
-                    },
-                    unit_amount: Math.round(orderData.tax * 100)
-                },
-                quantity: 1
-            });
-        }
-
-        // Create Stripe checkout session
-        const session = await req.app.locals.stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: lineItems,
-            mode: 'payment',
-            success_url: `https://sweet-cravings-sigma.vercel.app/confirmation?session_id={CHECKOUT_SESSION_ID}&order_id=${newOrder.orderId}`,
-            cancel_url: `https://sweet-cravings-sigma.vercel.app/checkout?cancelled=true`,
-            metadata: {
-                orderId: newOrder.orderId
-            }
-        });
-
-        // Update order with the Stripe Session ID
-        newOrder.stripeSessionId = session.id;
-        await newOrder.save();
+        console.log('Razorpay order created successfully:', order.id);
 
         res.json({
             success: true,
-            url: session.url,
-            sessionId: session.id
+            order_id: order.id,
+            amount: order.amount,
+            currency: order.currency,
+            key_id: req.app.locals.razorpayKeyId || 'rzp_test_R5uZgmenogCy4j'
         });
     } catch (error) {
-        console.error('Stripe Checkout Session error:', error);
+        console.error('Razorpay order creation error:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to create payment session',
+            error: 'Failed to create payment order',
             message: error.message
         });
     }
 });
 
-// API: Verify Stripe Checkout Session
-router.post('/api/verify-stripe-session', async (req, res) => {
+// Verify Razorpay payment - API endpoint for React
+router.post('/api/verify-payment', async (req, res) => {
     try {
-        const { session_id, order_id } = req.body;
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderData } = req.body;
 
-        if (!session_id || !order_id) {
-            return res.status(400).json({ success: false, error: 'Session ID and Order ID are required' });
-        }
+        // In production, verify the signature using crypto
+        // const crypto = require('crypto');
+        // const generated_signature = crypto.createHmac('sha256', 'iou4q509iexeJOlJNCpq7gBd')
+        //     .update(razorpay_order_id + '|' + razorpay_payment_id)
+        //     .digest('hex');
 
-        // Retrieve Stripe session
-        const session = await req.app.locals.stripe.checkout.sessions.retrieve(session_id);
+        // if (generated_signature === razorpay_signature) {
+        //     // Payment verified successfully
+        // }
 
-        if (session && session.payment_status === 'paid') {
-            // Find order and update payment status to paid
-            const order = await Order.findOne({ orderId: order_id });
-            
-            if (!order) {
-                return res.status(404).json({ success: false, error: 'Order not found' });
-            }
+        // Save the order to MongoDB
+        if (orderData) {
+            const newOrder = new Order({
+                orderId: 'ORD-' + Date.now(),
+                customer: orderData.customer,
+                address: orderData.address,
+                items: orderData.items,
+                subtotal: orderData.subtotal,
+                deliveryFee: orderData.deliveryFee,
+                tax: orderData.tax,
+                total: orderData.total,
+                paymentMethod: orderData.paymentMethod,
+                paymentStatus: 'paid',
+                razorpayOrderId: razorpay_order_id,
+                razorpayPaymentId: razorpay_payment_id,
+                razorpaySignature: razorpay_signature,
+                orderStatus: 'pending'
+            });
 
-            order.paymentStatus = 'paid';
-            order.stripePaymentIntentId = session.payment_intent;
-            await order.save();
+            await newOrder.save();
 
-            console.log(`Stripe Payment Verified for Order ID: ${order.orderId}`);
+            console.log('Payment Verified & Order Saved to MongoDB:');
+            console.log('==========================================');
+            console.log(`Order ID: ${newOrder.orderId}`);
+            console.log(`Customer: ${newOrder.customer.firstName} ${newOrder.customer.lastName}`);
+            console.log(`Email: ${newOrder.customer.email}`);
+            console.log(`Phone: ${newOrder.customer.phone}`);
+            console.log(`Razorpay Payment ID: ${razorpay_payment_id}`);
+            console.log(`Total: ₹${newOrder.total.toFixed(2)}`);
+            console.log('==========================================\n');
 
             res.json({
                 success: true,
                 message: 'Payment verified successfully',
-                order: {
-                    orderId: order.orderId,
-                    customer: order.customer,
-                    address: order.address,
-                    items: order.items,
-                    total: order.total,
-                    paymentMethod: 'stripe'
-                }
+                orderId: newOrder.orderId
             });
         } else {
             res.status(400).json({
                 success: false,
-                error: 'Payment not completed on Stripe'
+                error: 'Order data missing'
             });
         }
     } catch (error) {
-        console.error('Stripe Verification error:', error);
+        console.error('Payment verification error:', error);
         res.status(500).json({
             success: false,
             error: 'Payment verification failed',

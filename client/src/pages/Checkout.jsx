@@ -20,7 +20,7 @@ function Checkout() {
     city: 'Coimbatore',
     zipCode: '641002',
     instructions: '',
-    paymentMethod: 'stripe'
+    paymentMethod: 'razorpay'
   });
 
   const [promoCode, setPromoCode] = useState('');
@@ -142,35 +142,86 @@ function Checkout() {
         return;
       }
 
-      // Handle Stripe payment
-      const response = await axios.post('/api/create-stripe-session', {
-        orderData: orderData
+      // Handle Razorpay payment
+      const response = await axios.post('/api/create-razorpay-order', {
+        amount: total,
+        currency: 'INR',
+        receipt: 'order_' + Date.now()
       });
 
-      if (response.data.success && response.data.url) {
-        // Update user profile data locally if signed in (speed up next checkouts)
-        try {
-          if (user && (!user.unsafeMetadata.address || !user.unsafeMetadata.phone)) {
-            await user.update({
-              unsafeMetadata: {
-                ...user.unsafeMetadata,
-                address: `${formData.street}, ${formData.city} - ${formData.zipCode}`,
-                phone: formData.phone
+      if (!response.data.success) {
+        alert('Failed to create payment order: ' + response.data.message);
+        return;
+      }
+
+      const options = {
+        key: response.data.key_id,
+        amount: response.data.amount,
+        currency: response.data.currency,
+        name: 'SweetCravings',
+        description: 'Order Payment',
+        order_id: response.data.order_id,
+        handler: async function (paymentResponse) {
+          try {
+            const verifyRes = await axios.post('/api/verify-payment', {
+              razorpay_order_id: paymentResponse.razorpay_order_id,
+              razorpay_payment_id: paymentResponse.razorpay_payment_id,
+              razorpay_signature: paymentResponse.razorpay_signature,
+              orderData: orderData
+            });
+
+            alert('Payment Successful!');
+            
+            try {
+              if (user && (!user.unsafeMetadata.address || !user.unsafeMetadata.phone)) {
+                await user.update({
+                  unsafeMetadata: {
+                    ...user.unsafeMetadata,
+                    address: `${formData.street}, ${formData.city} - ${formData.zipCode}`,
+                    phone: formData.phone
+                  }
+                });
+              }
+            } catch (err) { console.error('Failed to save profile details', err); }
+
+            clearCart();
+            navigate('/confirmation', {
+              state: {
+                orderData: {
+                  ...orderData,
+                  orderId: verifyRes.data.orderId
+                }
               }
             });
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            alert('Payment verification failed!');
           }
-        } catch (err) {
-          console.error('Failed to save profile details', err);
+        },
+        prefill: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.phone
+        },
+        theme: {
+          color: '#ff6161'
+        },
+        modal: {
+          ondismiss: function() {
+            console.log('Payment cancelled by user');
+          }
         }
+      };
 
-        // Redirect directly to Stripe Checkout website
-        window.location.href = response.data.url;
-      } else {
-        alert('Failed to create payment session: ' + response.data.error);
-      }
+      const razorpay = new window.Razorpay(options);
+      razorpay.on('payment.failed', function (response) {
+        console.error('Payment failed:', response.error);
+        alert('Payment failed: ' + response.error.description);
+      });
+      razorpay.open();
     } catch (error) {
       console.error('Checkout error:', error);
-      alert('Failed to create payment session: ' + (error.response?.data?.message || error.message));
+      alert('Failed to create payment order: ' + (error.response?.data?.message || error.message));
     }
   };
 
@@ -297,11 +348,11 @@ function Checkout() {
                 <input 
                   type="radio" 
                   name="paymentMethod" 
-                  value="stripe" 
-                  checked={formData.paymentMethod === 'stripe'}
+                  value="razorpay" 
+                  checked={formData.paymentMethod === 'razorpay'}
                   onChange={handleInputChange}
                 />
-                <span>Pay with Card / Stripe</span>
+                <span>Pay with Razorpay</span>
               </label>
               <label style={{display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer'}}>
                 <input 

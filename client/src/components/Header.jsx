@@ -149,29 +149,6 @@ function Header() {
       icon: <IconShield className="w-full h-full" />,
       href: "/admin/login"
     });
-
-    // Add Profile User button (Clerk UserButton)
-    dockItems.push({
-      title: "Profile",
-      icon: (
-        <UserButton
-          afterSignOutUrl="/"
-          appearance={{
-            elements: {
-              avatarBox: 'clerk-user-avatar-dock'
-            }
-          }}
-        >
-          <UserButton.UserProfilePage
-            label="Delivery Details"
-            url="delivery"
-            labelIcon={<i className="fas fa-truck"></i>}
-          >
-            <DeliveryDetailsPage />
-          </UserButton.UserProfilePage>
-        </UserButton>
-      )
-    });
   }
   const [selectedLocation, setSelectedLocation] = useState('Coimbatore');
   const [isLocating, setIsLocating] = useState(false);
@@ -239,8 +216,29 @@ function Header() {
               </div>
             </form>
 
-            <div className="nav-actions">
+            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                <HeaderDock items={dockItems} />
+
+              <SignedIn>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: {
+                        avatarBox: 'clerk-user-avatar-dock'
+                      }
+                    }}
+                  >
+                    <UserButton.UserProfilePage
+                      label="Delivery Details"
+                      url="delivery"
+                      labelIcon={<i className="fas fa-truck"></i>}
+                    >
+                      <DeliveryDetailsPage />
+                    </UserButton.UserProfilePage>
+                  </UserButton>
+                </div>
+              </SignedIn>
 
               {/* Clerk Authentication */}
               <SignedOut>

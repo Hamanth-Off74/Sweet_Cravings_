@@ -1,7 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import axios from '../api/axios';
-import { useCart } from '../context/CartContext';
 import '../styles/Confirmation.css';
 
 /* ─── Confetti ─── */
@@ -56,7 +54,7 @@ function buildWhatsAppMessage(orderData) {
 
   const payLabel = paymentMethod === 'cod' || paymentMethod === 'cash'
     ? '💵 Cash on Delivery'
-    : '💳 Online (Stripe)';
+    : '💳 Online (Razorpay)';
 
   const msg =
 `🎉 *Order Confirmed — SweetCravings!*
@@ -81,14 +79,7 @@ Thank you for choosing SweetCravings! 🧁❤️`;
 /* ─── Main Component ─── */
 export default function Confirmation() {
   const location = useLocation();
-  const { clearCart } = useCart();
-  const query = new URLSearchParams(location.search);
-  const sessionId = query.get('session_id');
-  const orderId = query.get('order_id');
-
-  const [orderData, setOrderData] = useState(location.state?.orderData || null);
-  const [loading, setLoading] = useState(!!sessionId);
-  const [error, setError] = useState(null);
+  const orderData = location.state?.orderData || null;
   const [showConfetti, setShowConfetti] = useState(true);
   const [previewExpanded, setPreviewExpanded] = useState(false);
 
@@ -97,33 +88,6 @@ export default function Confirmation() {
     const t = setTimeout(() => setShowConfetti(false), 4000);
     return () => clearTimeout(t);
   }, []);
-
-  // Verify Stripe payment session if query parameters are present
-  useEffect(() => {
-    if (sessionId && orderId && !orderData) {
-      const verifyStripePayment = async () => {
-        try {
-          const response = await axios.post('/api/verify-stripe-session', {
-            session_id: sessionId,
-            order_id: orderId
-          });
-
-          if (response.data.success) {
-            setOrderData(response.data.order);
-            clearCart(); // Clear cart now that payment is confirmed!
-          } else {
-            setError(response.data.error || 'Payment verification failed');
-          }
-        } catch (err) {
-          console.error('Failed to verify Stripe payment:', err);
-          setError('Failed to verify payment session. Please contact customer support.');
-        } finally {
-          setLoading(false);
-        }
-      };
-      verifyStripePayment();
-    }
-  }, [sessionId, orderId, orderData, clearCart]);
 
   const waMessage = buildWhatsAppMessage(orderData);
   const waUrl = `https://wa.me/?text=${encodeURIComponent(waMessage)}`;
@@ -136,37 +100,14 @@ export default function Confirmation() {
     subtotal: 0,
     deliveryFee: 0,
     total: 0,
-    paymentMethod: 'stripe',
+    paymentMethod: 'razorpay',
     address: { street: '', city: '' }
   };
 
   const payLabel =
     displayOrder.paymentMethod === 'cod' || displayOrder.paymentMethod === 'cash'
       ? 'Cash on Delivery'
-      : 'Online Payment (Stripe)';
-
-  if (loading) {
-    return (
-      <div className="confirmation-page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <i className="fas fa-spinner fa-spin" style={{ fontSize: '48px', color: '#ff6b6b', marginBottom: '20px' }}></i>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c1810', fontFamily: 'Playfair Display, serif' }}>Verifying Payment...</h2>
-        <p style={{ color: '#666', marginTop: '10px' }}>Please do not close this window or refresh the page.</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="confirmation-page" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center', padding: '20px' }}>
-        <i className="fas fa-exclamation-triangle" style={{ fontSize: '48px', color: '#ff6b6b', marginBottom: '20px' }}></i>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#2c1810', fontFamily: 'Playfair Display, serif' }}>Payment Verification Failed</h2>
-        <p style={{ color: '#666', margin: '10px 0 30px 0' }}>{error}</p>
-        <Link to="/checkout" className="action-btn primary" style={{ background: '#ff6b6b', color: '#fff', textDecoration: 'none', padding: '12px 24px', borderRadius: '8px' }}>
-          Back to Checkout
-        </Link>
-      </div>
-    );
-  }
+      : 'Online Payment (Razorpay)';
 
   return (
     <>
