@@ -43,7 +43,7 @@ const OrderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['razorpay', 'cash', 'cod'],
+        enum: ['stripe', 'razorpay', 'cash', 'cod'],
         required: true
     },
     paymentStatus: {
@@ -51,6 +51,8 @@ const OrderSchema = new mongoose.Schema({
         enum: ['pending', 'paid', 'failed'],
         default: 'pending'
     },
+    stripeSessionId: String,
+    stripePaymentIntentId: String,
     razorpayOrderId: String,
     razorpayPaymentId: String,
     razorpaySignature: String,

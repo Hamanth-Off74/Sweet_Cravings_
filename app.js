@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const Razorpay = require('razorpay');
+const Stripe = require('stripe');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -43,16 +43,19 @@ mongoose.connect(dbURI)
 .then(() => console.log('MongoDB Connected Successfully'))
 .catch(err => console.log('MongoDB Connection Error:', err));
 
-// Razorpay instance (TEST MODE)
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_R5uZgmenogCy4j',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'iou4q509iexeJOlJNCpq7gBd'
-});
+// Stripe instance (Loaded from Environment Variables)
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
 
-// Make razorpay instance available to routes
-app.locals.razorpay = razorpay;
-app.locals.razorpayKeyId = process.env.RAZORPAY_KEY_ID || 'rzp_test_R5uZgmenogCy4j';
-app.locals.razorpayWebhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || 'webhook_secret_123';
+if (!stripeSecretKey) {
+    console.error('CRITICAL WARNING: STRIPE_SECRET_KEY environment variable is not defined.');
+}
+
+const stripe = new Stripe(stripeSecretKey || 'dummy_test_key_so_app_does_not_crash_locally');
+
+// Make stripe instance and keys available to routes
+app.locals.stripe = stripe;
+app.locals.stripePublishableKey = stripePublishableKey;
 
 // Bodyparser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
