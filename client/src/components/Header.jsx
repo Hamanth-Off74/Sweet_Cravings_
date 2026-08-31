@@ -165,16 +165,6 @@ function Header() {
       <div className="bg-overlay"></div>
 
       <header className="header">
-        <div className="top-bar">
-          <div className="container">
-            <div className="top-links">
-              <span><i className="fas fa-truck"></i> Free Delivery on orders above ₹500</span>
-              <span><i className="fas fa-phone"></i> Customer Support: 1800-123-4567</span>
-              <span><i className="fas fa-store"></i> Become a Seller</span>
-            </div>
-          </div>
-        </div>
-
         <nav className="navbar">
           <div className="container">
             <div className="nav-brand">
