@@ -170,16 +170,8 @@ function Header() {
             <div className="nav-brand">
               <Link to="/" className="logo">
                 <i className="fas fa-birthday-cake"></i>
-                SweetCravings
+                <span>SweetCravings</span>
               </Link>
-              <div className="location-selector" onClick={handleLocationClick}>
-                <i className={`fas ${isLocating ? 'fa-spinner fa-spin' : 'fa-map-marker-alt'}`}></i>
-                <div className="location-info">
-                  <span className="location-label">Deliver to</span>
-                  <span className="location-address">{isLocating ? 'Locating...' : selectedLocation}</span>
-                </div>
-                <i className="fas fa-chevron-down"></i>
-              </div>
             </div>
 
             <form className="search-bar" onSubmit={handleSearch}>
