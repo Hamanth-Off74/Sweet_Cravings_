@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/images/(.*)",
-      "destination": "https://sweet-cravings-1.onrender.com/images/$1"
+      "destination": "https://sweet-cravings-2.onrender.com/images/$1"
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://sweet-cravings-1.onrender.com/api/$1"
+      "destination": "https://sweet-cravings-2.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",

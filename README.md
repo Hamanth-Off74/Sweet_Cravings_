@@ -242,7 +242,7 @@ Express serves `client/dist` and falls back to its `index.html`, which supports 
 5. Set backend `CORS_ORIGIN` to the exact frontend URL.
 6. Ensure the frontend deployment includes the supplied SPA rewrite configuration in `client/vercel.json`.
 
-The repository also includes [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) with additional deployment and testing notes.
+For the current deployment setup, see [VERCEL_RENDER_DEPLOYMENT.md](VERCEL_RENDER_DEPLOYMENT.md). The repository also includes [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) with additional deployment and testing notes.
 
 ## Security and Production Notes
 
