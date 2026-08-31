@@ -591,6 +591,48 @@ function Orders() {
                   </p>
                 </div>
 
+                {/* Animated Delivery Map */}
+                <div style={{ marginBottom: '15px' }}>
+                  <h4 style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#888', textTransform: 'uppercase' }}>Live Tracking</h4>
+                  <svg viewBox="0 0 400 120" style={{ width: '100%', height: '120px', background: '#f5f7fb', borderRadius: '12px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                    {/* Background grids/parks */}
+                    <rect x="0" y="0" width="400" height="120" fill="#f8fafc" />
+                    <rect x="15" y="15" width="80" height="40" rx="8" fill="#e2f5ea" />
+                    <rect x="280" y="65" width="100" height="40" rx="8" fill="#e2f5ea" />
+                    <rect x="180" y="10" width="70" height="30" rx="6" fill="#e2f5ea" />
+                    
+                    {/* Dotted grey road */}
+                    <path d="M 40 80 C 120 120, 160 20, 240 70 S 320 20, 360 40" fill="none" stroke="#e2e8f0" strokeWidth="8" strokeLinecap="round" />
+                    {/* Dotted red progress road */}
+                    <path d="M 40 80 C 120 120, 160 20, 240 70 S 320 20, 360 40" fill="none" stroke="#ff8787" strokeWidth="4" strokeLinecap="round" strokeDasharray="6,6" />
+                    
+                    {/* Bakery Start Point */}
+                    <g transform="translate(40, 80)">
+                      <circle cx="0" cy="0" r="16" fill="#ffebee" stroke="#ff6b6b" strokeWidth="2" />
+                      <text x="0" y="5" fontSize="12" textAnchor="middle">🏪</text>
+                    </g>
+                    <text x="40" y="112" fontSize="9" fontWeight="bold" fill="#888" textAnchor="middle">Bakery</text>
+
+                    {/* Customer End Point */}
+                    <g transform="translate(360, 40)">
+                      <circle cx="0" cy="0" r="16" fill="#e8f5e9" stroke="#4caf50" strokeWidth="2" />
+                      <text x="0" y="5" fontSize="12" textAnchor="middle">🏠</text>
+                    </g>
+                    <text x="360" y="72" fontSize="9" fontWeight="bold" fill="#888" textAnchor="middle">You</text>
+                    
+                    {/* Moving Delivery Bike */}
+                    <g>
+                      <text fontSize="20" y="6" x="-10">🏍️</text>
+                      <animateMotion 
+                        dur="12s" 
+                        repeatCount="indefinite" 
+                        path="M 40 80 C 120 120, 160 20, 240 70 S 320 20, 360 40" 
+                        rotate="auto"
+                      />
+                    </g>
+                  </svg>
+                </div>
+
                 {trackingOrder.deliveryPartner && (
                   <div style={{
                     background: '#f9f9f9',
