@@ -1,22 +1,29 @@
-/* Admin Dashboard Styles - Matching Main Website Theme */
-
 /* CSS Variables matching main website */
 :root {
-    --primary-color: #ff6b6b;
-    --secondary-color: #ee5a24;
-    --dark-color: #2c3e50;
-    --light-color: #ecf0f1;
-    --text-color: #333;
+    --primary-color: #c96b63;      /* Match --brand-primary */
+    --secondary-color: #e8a87c;    /* Match --brand-accent */
+    --dark-color: #2c1810;         /* Match --brand-dark */
+    --light-color: #faf8f5;        /* Match --bg-base */
+    --text-color: #1a1108;         /* Match --text-primary */
     --border-radius: 12px;
     --transition: all 0.3s ease;
-    --shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.2);
-    --bg-gradient: radial-gradient(1200px circle at 50% 25%,
-            #ffffff 0%,
-            #fff7fb 35%,
-            #ffeaf1 60%,
-            #ffd8e4 80%,
-            #ffc8d6 100%);
+    --shadow: 0 8px 30px rgba(44, 24, 16, 0.08);
+    --shadow-hover: 0 15px 40px rgba(44, 24, 16, 0.15);
+    --bg-gradient: #faf8f5;        /* Solid warm-white matching main page background */
+}
+
+/* Typography matching main page */
+.admin-dashboard, .admin-loading {
+    font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+.admin-dashboard h1,
+.admin-dashboard h2,
+.admin-dashboard h3,
+.sidebar-header h2,
+.orders-header h2 {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: 700;
 }
 
 /* Loading State */
