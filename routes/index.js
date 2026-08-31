@@ -1030,8 +1030,13 @@ router.put('/api/admin/desserts/:id', verifyAdminToken, async (req, res) => {
         const { id } = req.params;
         const updates = req.body;
 
-        // Try to update in MongoDB
-        let dessert = await Dessert.findByIdAndUpdate(id, updates, { new: true });
+        let dessert = null;
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+
+        // Try to update in MongoDB only if the ID is a valid ObjectId
+        if (isValidObjectId) {
+            dessert = await Dessert.findByIdAndUpdate(id, updates, { new: true });
+        }
 
         if (!dessert) {
             // Fallback to in-memory desserts
@@ -1065,8 +1070,13 @@ router.delete('/api/admin/desserts/:id', verifyAdminToken, async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Try to delete from MongoDB
-        let deleted = await Dessert.findByIdAndDelete(id);
+        let deleted = null;
+        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+
+        // Try to delete from MongoDB only if the ID is a valid ObjectId
+        if (isValidObjectId) {
+            deleted = await Dessert.findByIdAndDelete(id);
+        }
 
         if (!deleted) {
             // Fallback to in-memory desserts
