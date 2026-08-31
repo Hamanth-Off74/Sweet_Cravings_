@@ -400,6 +400,7 @@
     font-size: 34px;
     font-weight: 700;
     color: var(--text-color);
+    font-family: 'Inter', system-ui, sans-serif !important;
 }
 
 .stat-icon {
