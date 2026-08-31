@@ -419,60 +419,45 @@ function DessertManagement() {
                         </div>
 
                         <form onSubmit={handleSubmit} style={{ padding: '25px' }}>
-                            {/* Image Upload */}
-                            <div style={{ marginBottom: '20px' }}>
-                                <label style={{ display: 'block', marginBottom: '8px', fontWeight: '500', color: '#555' }}>
-                                    Dessert Image
+                            {/* Image Address URL */}
+                            <div style={{ marginBottom: '18px' }}>
+                                <label style={{ display: 'block', marginBottom: '6px', fontWeight: '500', color: '#555', fontSize: '14px' }}>
+                                    Dessert Image URL *
                                 </label>
-                                <div
-                                    onClick={() => fileInputRef.current?.click()}
-                                    style={{
-                                        border: '2px dashed #ddd',
-                                        borderRadius: '12px',
-                                        padding: '30px',
-                                        textAlign: 'center',
-                                        cursor: 'pointer',
-                                        background: formData.imageURL ? `url(${formData.imageURL}) center/cover no-repeat` : '#fafafa',
-                                        minHeight: '150px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        position: 'relative'
-                                    }}
-                                >
-                                    {uploading ? (
-                                        <div>
-                                            <i className="fas fa-spinner fa-spin" style={{ fontSize: '24px', color: '#ff6b6b' }}></i>
-                                            <p style={{ margin: '10px 0 0 0', color: '#888' }}>Uploading...</p>
-                                        </div>
-                                    ) : formData.imageURL ? (
-                                        <div style={{
-                                            position: 'absolute',
-                                            bottom: '10px',
-                                            left: '50%',
-                                            transform: 'translateX(-50%)',
-                                            background: 'rgba(0,0,0,0.7)',
-                                            color: '#fff',
-                                            padding: '8px 16px',
-                                            borderRadius: '20px',
-                                            fontSize: '12px'
-                                        }}>
-                                            Click to change image
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <i className="fas fa-cloud-upload-alt" style={{ fontSize: '32px', color: '#ccc' }}></i>
-                                            <p style={{ margin: '10px 0 0 0', color: '#888' }}>Click to upload image</p>
-                                        </div>
-                                    )}
-                                </div>
                                 <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    style={{ display: 'none' }}
+                                    type="text"
+                                    name="imageURL"
+                                    value={formData.imageURL}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder="Enter image address (e.g., /images/cakes/chocolate-cake.jpg or https://...)"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        border: '1px solid #e0e0e0',
+                                        borderRadius: '10px',
+                                        fontSize: '14px'
+                                    }}
                                 />
+                                {formData.imageURL && (
+                                    <div style={{ textAlign: 'center', marginTop: '12px', background: '#fafafa', padding: '10px', borderRadius: '10px', border: '1px solid #eee' }}>
+                                        <p style={{ margin: '0 0 6px 0', fontSize: '12px', color: '#888', textAlign: 'left' }}>Image Preview:</p>
+                                        <img 
+                                            src={formData.imageURL} 
+                                            alt="Dessert preview" 
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=200&h=200&fit=crop'; // fallback placeholder
+                                            }}
+                                            style={{
+                                                maxHeight: '110px',
+                                                borderRadius: '8px',
+                                                border: '1px solid #ddd',
+                                                objectFit: 'cover'
+                                            }} 
+                                        />
+                                    </div>
+                                )}
                             </div>
 
                             {/* Name */}
