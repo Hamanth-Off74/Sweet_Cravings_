@@ -1060,4 +1060,13 @@ footer {
 .cl-formFieldInput:focus {
   border-color: #ff6b6b !important;
   box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2) !important;
+}
+
+/* User Button Avatar Style inside Header Dock */
+.clerk-user-avatar-dock {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  border: none !important;
+  box-shadow: none !important;
 }

@@ -5,7 +5,7 @@ import { useDarkMode } from '../context/DarkModeContext';
 import { useState } from 'react';
 import BackgroundSlideshow from './BackgroundSlideshow';
 import { HeaderDock } from './ui/header-dock';
-import { IconShoppingCart, IconMoon, IconSun, IconReceipt } from '@tabler/icons-react';
+import { IconShoppingCart, IconMoon, IconSun, IconReceipt, IconShield } from '@tabler/icons-react';
 import FloatingVoiceButton from './FloatingVoiceButton';
 
 const DeliveryDetailsPage = () => {
@@ -118,9 +118,61 @@ const DeliveryDetailsPage = () => {
 
 
 function Header() {
+  const { user } = useUser();
   const { getCartCount } = useCart();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const dockItems = [
+    {
+      title: isDarkMode ? 'Light Mode' : 'Dark Mode',
+      icon: isDarkMode ? <IconSun className="w-full h-full" /> : <IconMoon className="w-full h-full" />,
+      onClick: toggleDarkMode
+    },
+    {
+      title: "Orders",
+      icon: <IconReceipt className="w-full h-full" />,
+      href: "/orders"
+    },
+    {
+      title: "Cart",
+      icon: <IconShoppingCart className="w-full h-full" />,
+      href: "/cart",
+      badge: getCartCount() > 0 ? getCartCount() : null
+    }
+  ];
+
+  if (user) {
+    // Add Admin Panel icon
+    dockItems.push({
+      title: "Admin Panel",
+      icon: <IconShield className="w-full h-full" />,
+      href: "/admin/login"
+    });
+
+    // Add Profile User button (Clerk UserButton)
+    dockItems.push({
+      title: "Profile",
+      icon: (
+        <UserButton
+          afterSignOutUrl="/"
+          appearance={{
+            elements: {
+              avatarBox: 'clerk-user-avatar-dock'
+            }
+          }}
+        >
+          <UserButton.UserProfilePage
+            label="Delivery Details"
+            url="delivery"
+            labelIcon={<i className="fas fa-truck"></i>}
+          >
+            <DeliveryDetailsPage />
+          </UserButton.UserProfilePage>
+        </UserButton>
+      )
+    });
+  }
   const [selectedLocation, setSelectedLocation] = useState('Coimbatore');
   const [isLocating, setIsLocating] = useState(false);
   const location = useLocation();
@@ -188,26 +240,7 @@ function Header() {
             </form>
 
             <div className="nav-actions">
-              <HeaderDock
-                items={[
-                  {
-                    title: isDarkMode ? 'Light Mode' : 'Dark Mode',
-                    icon: isDarkMode ? <IconSun className="w-full h-full" /> : <IconMoon className="w-full h-full" />,
-                    onClick: toggleDarkMode
-                  },
-                  {
-                    title: "Orders",
-                    icon: <IconReceipt className="w-full h-full" />,
-                    href: "/orders"
-                  },
-                  {
-                    title: "Cart",
-                    icon: <IconShoppingCart className="w-full h-full" />,
-                    href: "/cart",
-                    badge: getCartCount() > 0 ? getCartCount() : null
-                  }
-                ]}
-              />
+               <HeaderDock items={dockItems} />
 
               {/* Clerk Authentication */}
               <SignedOut>
@@ -220,56 +253,6 @@ function Header() {
                   </SignUpButton>
                 </div>
               </SignedOut>
-
-              <SignedIn>
-                <div id="user-actions" className="user-profile" style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                  <Link to="/admin/login" style={{
-                    width: '40px',
-                    height: '40px',
-                    minWidth: '40px',
-                    minHeight: '40px',
-                    background: 'linear-gradient(135deg, #ff6161 0%, #ff8787 100%)',
-                    color: '#fff',
-                    textDecoration: 'none',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s',
-                    boxShadow: '0 2px 8px rgba(255, 97, 97, 0.3)',
-                    fontSize: '16px',
-                    flexShrink: '0'
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.05)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 97, 97, 0.5)';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(255, 97, 97, 0.3)';
-                  }}
-                  title="Admin Panel"
-                  >
-                    <i className="fas fa-user-shield"></i>
-                  </Link>
-                  <UserButton
-                    afterSignOutUrl="/"
-                    appearance={{
-                      elements: {
-                        avatarBox: 'clerk-user-avatar'
-                      }
-                    }}
-                  >
-                    <UserButton.UserProfilePage
-                      label="Delivery Details"
-                      url="delivery"
-                      labelIcon={<i className="fas fa-truck"></i>}
-                    >
-                      <DeliveryDetailsPage />
-                    </UserButton.UserProfilePage>
-                  </UserButton>
-                </div>
-              </SignedIn>
             </div>
           </div>
         </nav>
